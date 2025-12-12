@@ -16,23 +16,23 @@
         */
         :root {
             /* MÀU CHÍNH */
-            --primary-color: #ffffff;             /* Trắng tinh khiết */
-            --accent-color: #ffffff;              /* Màu chữ tiêu đề/quan trọng: Trắng */
+            --primary-color: #ffffff;      /* Trắng tinh khiết */
+            --accent-color: #ffffff;       /* Màu chữ tiêu đề/quan trọng: Trắng */
             
             /* MÀU XANH DƯƠNG - CYBER NEON */
-            --cyber-blue: #00e5ff;                /* Xanh Dương Sáng (Electric Blue) */
-            --sky-blue: #4facff;                  /* Xanh Dương Trời */
+            --cyber-blue: #00e5ff;          /* Xanh Dương Sáng (Electric Blue) */
+            --sky-blue: #4facff;            /* Xanh Dương Trời */
             
-            /* MÀU NỀN ĐỘ TƯƠNG PHẢN CAO (KHÔNG TRONG SUỐT) */
-            --box-bg: #020b17;                    /* Nền Dark Navy/Gần Đen */
+            /* MÀU NỀN ĐỘ TƯƠNG PHẢN CAO (KHÔNG TRONG SUỐC) */
+            --box-bg: #020b17;              /* Nền Dark Navy/Gần Đen */
             
             /* VIỀN VÀ BÓNG (Edges & Shadows) */
             --box-border: rgba(255, 255, 255, 0.4); /* Viền Trắng mờ */
             --neon-glow: 0 0 10px var(--cyber-blue), 0 0 20px var(--sky-blue); /* Ánh sáng Xanh Dương */
             
             /* MÀU RIÊNG BIỆT */
-            --discord-color: #5865F2;             /* Màu Discord */
-            --btn-text-color: #1a1a1a;            /* Màu chữ trên nút: Đen */
+            --discord-color: #5865F2;       /* Màu Discord */
+            --btn-text-color: #1a1a1a;      /* Màu chữ trên nút: Đen */
         }
 
         /*
@@ -56,7 +56,7 @@
             font-family: 'Spectral', serif;
             
             /* BACKGROUND NƯỚC ĐẠI DƯƠNG */
-            background-image: url('https://i.pinimg.com/474x/cc/c7/e8/ccc7e8d0c512c41c4b7ab2d3d8967c88.jpg');
+            background-image: url('https://i.pinimg.com/736x/0d/1a/31/0d1a31db79e6de86dd0aae30f45509c1.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -67,6 +67,8 @@
             
             /* ĐỔ BÓNG CHỮ ĐỂ TĂNG ĐỘ NỔI BẬT TRÊN NỀN NƯỚC */
             text-shadow: 0 0 5px rgba(0, 0, 0, 1), 0 0 8px rgba(0, 0, 0, 0.8); 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /*
@@ -94,17 +96,6 @@
             opacity: 0.9;
         }
 
-        /* Thiết lập các bong bóng cụ thể */
-        .bubble:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-duration: 9s; }
-        .bubble:nth-child(2) { width: 30px; height: 30px; left: 28%; animation-duration: 13s; animation-delay: 2s; }
-        .bubble:nth-child(3) { width: 15px; height: 15px; left: 60%; animation-duration: 10s; animation-delay: 1s; }
-        .bubble:nth-child(4) { width: 25px; height: 25px; left: 80%; animation-duration: 14s; animation-delay: 4s; }
-        .bubble:nth-child(5) { width: 40px; height: 40px; left: 45%; animation-duration: 18s; animation-delay: 3s; }
-        .bubble:nth-child(6) { width: 18px; height: 18px; left: 5%; animation-duration: 11s; animation-delay: 5s; }
-        .bubble:nth-child(7) { width: 35px; height: 35px; left: 90%; animation-duration: 16s; animation-delay: 6s; }
-        .bubble:nth-child(8) { width: 22px; height: 22px; left: 70%; animation-duration: 12s; animation-delay: 0s; }
-
-
         @keyframes rise {
             0% { 
                 bottom: -120px; 
@@ -124,6 +115,17 @@
             }
         }
 
+        /* Thiết lập các bong bóng cụ thể (Duy trì code ban đầu của bạn) */
+        .bubble:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-duration: 9s; }
+        .bubble:nth-child(2) { width: 30px; height: 30px; left: 28%; animation-duration: 13s; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 15px; height: 15px; left: 60%; animation-duration: 10s; animation-delay: 1s; }
+        .bubble:nth-child(4) { width: 25px; height: 25px; left: 80%; animation-duration: 14s; animation-delay: 4s; }
+        .bubble:nth-child(5) { width: 40px; height: 40px; left: 45%; animation-duration: 18s; animation-delay: 3s; }
+        .bubble:nth-child(6) { width: 18px; height: 18px; left: 5%; animation-duration: 11s; animation-delay: 5s; }
+        .bubble:nth-child(7) { width: 35px; height: 35px; left: 90%; animation-duration: 16s; animation-delay: 6s; }
+        .bubble:nth-child(8) { width: 22px; height: 22px; left: 70%; animation-duration: 12s; animation-delay: 0s; }
+
+
         /*
         ============================================================
         * CẤU TRÚC VÀ HEADER (Layout and Header)
@@ -141,9 +143,9 @@
             font-family: 'Cinzel', serif; 
             font-weight: 900; 
             font-size: 3.5rem; 
-            margin-bottom: 15px; /* Tăng khoảng cách dưới tiêu đề */
-            letter-spacing: 7px; /* Tăng khoảng cách chữ */
-            display: inline-block; /* Quan trọng để 2 span hoạt động */
+            margin-bottom: 15px; 
+            letter-spacing: 7px; 
+            display: inline-block; 
             line-height: 1.2;
         }
 
@@ -174,7 +176,7 @@
             font-size: 1.1rem; 
             line-height: 1.6;
             letter-spacing: 0.5px;
-            margin-bottom: 50px; /* Tăng khoảng cách dưới subtitle */
+            margin-bottom: 50px; 
             opacity: 0.95;
             color: var(--primary-color);
         }
@@ -187,7 +189,7 @@
         .server-stats {
             display: flex;
             justify-content: center;
-            gap: 30px; /* Tăng khoảng cách giữa 2 box */
+            gap: 30px; 
             margin-bottom: 55px;
             flex-wrap: wrap;
         }
@@ -196,8 +198,8 @@
             /* SỬ DỤNG MÀU ĐẶC, KHÔNG TRONG SUỐT */
             background: var(--box-bg); 
             
-            border: 2px solid var(--discord-color); /* Giữ viền Discord */
-            border-radius: 16px; /* Bo tròn hơn */
+            border: 2px solid var(--discord-color); 
+            border-radius: 16px; 
             padding: 35px 45px;
             min-width: 320px;
             max-width: 450px;
@@ -210,17 +212,29 @@
             align-items: center;
             position: relative;
         }
+        
+        .server-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 16px;
+            pointer-events: none;
+        }
 
         .server-box:hover {
-            transform: translateY(-10px) scale(1.05); /* Hiệu ứng bay lên rõ rệt hơn */
-            background: #051a30; /* Tối hơn một chút khi hover */
+            transform: translateY(-10px) scale(1.05); 
+            background: #051a30; 
             box-shadow: 0 0 40px var(--discord-color), 0 25px 70px rgba(2, 8, 30, 0.9);
         }
 
         .server-name {
             font-family: 'Cinzel', serif; 
             font-weight: 700;
-            font-size: 1.8rem; /* To hơn */
+            font-size: 1.8rem; 
             margin-bottom: 6px;
             color: var(--accent-color);
             text-shadow: 0 0 12px var(--discord-color);
@@ -246,13 +260,19 @@
         .server-cta {
             display: inline-block;
             background: linear-gradient(90deg, var(--sky-blue), var(--cyber-blue));
-            padding: 14px 40px; /* Nút to hơn */
+            padding: 14px 40px; 
             border-radius: 999px;
             font-weight: 700;
             color: var(--btn-text-color);
             box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5);
             font-size: 1.2rem;
             text-transform: uppercase;
+            transition: all 0.3s ease;
+            font-family: 'Spectral', serif;
+        }
+        
+        .server-cta:hover {
+            opacity: 0.9;
         }
         
         .server-cta:active {
@@ -266,7 +286,7 @@
         ============================================================
         */
         .client-note {
-            max-width: 800px; /* Rộng hơn */
+            max-width: 800px; 
             margin: 0 auto 50px auto;
             font-family: 'Spectral', serif;
             font-weight: 600;
@@ -276,13 +296,17 @@
             /* NỀN ĐẶC */
             background: var(--box-bg);
             
-            border: 3px solid var(--cyber-blue); /* Viền đậm hơn */
+            border: 3px solid var(--cyber-blue); 
             box-shadow: 0 0 25px var(--cyber-blue), 0 0 50px var(--sky-blue); 
             
             color: var(--primary-color);
             text-shadow: 0 0 8px var(--cyber-blue);
             font-size: 1.15rem;
             line-height: 1.7;
+        }
+        
+        .client-note strong {
+            color: var(--cyber-blue);
         }
 
         /*
@@ -292,15 +316,14 @@
         */
         .client-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Card to hơn */
-            gap: 30px; /* Khoảng cách lớn hơn */
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+            gap: 30px; 
             padding-bottom: 60px;
         }
 
         .client-card {
-            /* NỀN ĐẶC */
+            /* SỬA LỖI: Tất cả các thẻ card đều là thẻ <a> */
             background: var(--box-bg); 
-            
             border: 2px solid var(--box-border);
             border-radius: 14px; 
             padding: 20px;
@@ -323,6 +346,11 @@
             border-color: var(--cyber-blue);
         }
 
+        .client-card > * { /* Thiết lập lại thuộc tính cho các thành phần con */
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
         .client-img {
             width: 100%;
             aspect-ratio: 16/9;
@@ -339,7 +367,7 @@
             margin-bottom: 12px; 
             color: var(--cyber-blue); 
             text-shadow: 0 0 10px var(--cyber-blue);
-            font-size: 1.3rem; /* To hơn */
+            font-size: 1.3rem; 
         }
 
         .btn-play {
@@ -354,11 +382,18 @@
             font-size: 1.0rem;
             text-transform: uppercase;
             transition: all 0.3s ease;
+            font-family: 'Spectral', serif;
+            width: fit-content; /* Đảm bảo nút không kéo giãn 100% */
         }
         
         .btn-play:hover {
             box-shadow: 0 8px 30px rgba(0, 229, 255, 0.8);
             transform: scale(1.05);
+        }
+        
+        .btn-play:focus, .server-cta:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 4px;
         }
 
         /*
@@ -368,13 +403,13 @@
         */
         .footer {
             font-family: 'Spectral', serif;
-            font-size: 1.0rem; /* To hơn */
+            font-size: 1.0rem; 
             opacity: 0.8;
             margin-top: 40px;
             padding: 20px 0;
             text-shadow: none;
             color: var(--primary-color);
-            border-top: 1px solid rgba(255, 255, 255, 0.2); /* Thêm đường kẻ trên */
+            border-top: 1px solid rgba(255, 255, 255, 0.2); 
             letter-spacing: 1px;
         }
 
@@ -406,67 +441,6 @@
             .btn-play { font-size: 0.9rem; padding: 8px 18px; }
         }
 
-        /*
-        ============================================================
-        * CÁC QUY TẮC PHỤ ĐỂ ĐẢM BẢO DÒNG CODE DÀI HƠN 500
-        * (Không ảnh hưởng đến chức năng cốt lõi)
-        ============================================================
-        */
-        .client-card a, .server-box a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .client-card:focus-within {
-            outline: 2px solid var(--cyber-blue);
-            outline-offset: 3px;
-        }
-        
-        .client-note strong {
-            color: var(--cyber-blue);
-        }
-
-        /* Đảm bảo tất cả các thành phần text quan trọng đều dùng Spectral */
-        .member-count { font-family: 'Spectral', serif; }
-        .server-info { font-family: 'Spectral', serif; }
-        .server-cta { font-family: 'Spectral', serif; text-transform: uppercase; }
-        .client-note { font-family: 'Spectral', serif; }
-        .btn-play { font-family: 'Spectral', serif; }
-        .footer { font-family: 'Spectral', serif; }
-
-        /* Thiết lập lại các thuộc tính cho các thành phần con của card */
-        .client-card > * {
-            margin-bottom: 5px;
-            text-align: center;
-        }
-        
-        /* Hiệu ứng focus cho các button */
-        .btn-play:focus, .server-cta:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 4px;
-        }
-
-        /* Tối ưu hóa render font chữ */
-        body {
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .server-box {
-            position: relative;
-        }
-
-        .server-box::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-            border-radius: 16px;
-            pointer-events: none;
-        } 
     </style>
 </head>
 <body>
@@ -487,17 +461,17 @@
         <p class="subtitle">Khám phá sức mạnh Roblox Client dưới đáy đại dương — Cập nhật mới nhất trên Discord</p>
 
         <div class="server-stats">
-            <a href="https://discord.gg/DxHFtbn6aX" target="_blank" class="server-box discord-box" aria-label="Nhà trẻ SUN Discord">
+            <a href="https://discord.gg/DxHFtbn6aX" target="_blank" rel="noopener noreferrer" class="server-box discord-box" aria-label="Nhà trẻ SUN Discord">
                 <span class="server-name">NHÀ TRẺ SUN</span>
                 <span class="member-count" id="sun-members">1.752 thành viên</span>
-                <span class="server-info">Cộng đồng </span>
+                <span class="server-info">Cộng đồng tập trung hỗ trợ và chia sẻ</span>
                 <span class="server-cta">Tham gia ngay</span>
             </a>
 
-            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="server-box discord-box" aria-label="Nhoi X Nak Discord">
+            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" rel="noopener noreferrer" class="server-box discord-box" aria-label="Nhoi X Nak Discord">
                 <span class="server-name">Nhoi X Nak</span>
                 <span class="member-count" id="nak-members">4.981 thành viên</span>
-                <span class="server-info">Cộng đồng </span>
+                <span class="server-info">Kênh Discord chính thức của NAK NO HACK</span>
                 <span class="server-cta">Tham gia ngay</span>
             </a>
         </div>
@@ -508,73 +482,71 @@
 
         <div class="client-grid">
             
-            <a href="https://www.mediafire.com/file/vbcghiry48yfhig/Delta%C3%97VNG_Font_Th%C6%B0%E1%BB%9Dng%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-img" class="client-card" target="_blank" rel="noopener">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG">
+            <a href="https://www.mediafire.com/file/vbcghiry48yfhig/Delta%C3%97VNG_Font_Th%C6%B0%E1%BB%9Dng%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG 2.701">
                 <div class="client-name">Delta×VNG 2.701</div>
                 <div class="btn-play">Ấn vào tải</div>
             </a>
 
-            <a href="https://www.mediafire.com/file/lynjnyiy2rk9wrm/DELTA%25C3%2597VNG%252BFixlag%252BFrom_Minecraft_%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="client-card" target="_blank" rel="noopener">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG Font Minecraft">
+            <a href="https://www.mediafire.com/file/lynjnyiy2rk9wrm/DELTA%25C3%2597VNG%252BFixlag%252BFrom_Minecraft_%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG Font Minecraft 2.701">
                 <div class="client-name">Delta×VNG Font Minecraf2.701</div>
                 <div class="btn-play">Ấn vào để tải</div>
-
-            <a href="https://www.mediafire.com/file/t1boyn5izcjuppb/Delta%C3%97VNG_Font_V%E1%BB%87t_S%C6%A1n%F0%9F%87%BB%F0%9F%87%B3.apk/file
-MediaFire" class="client-card">
-                <img src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6547387064519ebed7df6a08/0x0.png" class="client-img" alt="Delta×VNG Font Vệt Sơn">
+            </a> <a href="https://www.mediafire.com/file/t1boyn5izcjuppb/Delta%C3%97VNG_Font_V%E1%BB%87t_S%C6%A1n%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
+                <img src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6547387064519ebed7df6a08/0x0.png" class="client-img" alt="Delta×VNG Font Vệt Sơn 2.701">
                 <div class="client-name">Delta×VNG Font Vệt Sơn 2.701</div>
                 <div class="btn-play">Ấn vào để tải</div>
             </a>
 
-            <a href="https://www.mediafire.com/file/7y4eoezavcorz4s/Codex+VNG+V2.700(64bit).apk/file" class="client-card">
+            <a href="https://www.mediafire.com/file/7y4eoezavcorz4s/Codex+VNG+V2.700(64bit).apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486911580504075/images.jpg?ex=6934296a&is=6932d7ea&hm=ce7304b4da122028463068b2c57493b2e17a425a4954b4095ebaf6ae5d7ea6ce&=&format=webp&width=225&height=225" class="client-img" alt="Codex VNG">
                 <div class="client-name">Code×VNG</div>
                 <div class="btn-play">Ấn vào tải</div>
             </a>
 
-            <a href="https://www.mediafire.com/file/syfsk4ktulqnm5k/Arceus_VNG_V2.700%252864bit%2529.apk/file" class="client-card">
+            <a href="https://www.mediafire.com/file/syfsk4ktulqnm5k/Arceus_VNG_V2.700%252864bit%2529.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486910838247444/images_1.jpg?ex=69342969&is=6932d7e9&hm=fda1cb94bc8294946c3b285e332f631b92c8e52c2b756b11d5d02bb5f22ee33e&=&format=webp&width=416&height=416" class="client-img" alt="Arceus×VNG">
                 <div class="client-name">Arceus×VNG</div>
                 <div class="btn-play">Ấn vào tải</div>
             </a>
 
-            <a href="https://www.mediafire.com/file/90sbpa89qzbt17l/FluxusZ+VNG+V2.700(64bit).apk/file" class="client-card">
+            <a href="https://www.mediafire.com/file/90sbpa89qzbt17l/FluxusZ+VNG+V2.700(64bit).apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486911190565027/hqdefault.jpg?ex=6934296a&is=6932d7ea&hm=e265f0629f88a88b81f9a0dd8293bfdc3961fa634abcf4881a5707d084f55a28&=&format=webp&width=360&height=270" class="client-img" alt="Fluxusz×VNG">
                 <div class="client-name">Fluxusz×VNG</div>
                 <div class="btn-play">Ấn vào tải</div>
             </a>
 
-            <a href="https://link-delta-3.com" class="client-card">
+            <a href="https://link-delta-3.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/87CEFA/ffffff?text=Delta" class="client-img" alt="Delta Client">
                 <div class="client-name">Delta Client</div>
                 <div class="btn-play">GET KEY</div>
             </a>
 
-            <a href="https://link-trigon-tan.com" class="client-card">
+            <a href="https://link-trigon-tan.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/00BFFF/ffffff?text=Trigon+tan" class="client-img" alt="Trigon tan">
                 <div class="client-name">Trigon tan</div>
                 <div class="btn-play">GET KEY</div>
             </a>
-
-            <a href="https://link-origen-evo.com" class="client-card">
+            
+            <a href="https://link-origen-evo.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/1E90FF/ffffff?text=Origen+Evo" class="client-img" alt="Origen Evo">
                 <div class="client-name">Origen Evo</div>
                 <div class="btn-play">GET KEY</div>
             </a>
 
-            <a href="https://link-trigon-evo-1.com" class="client-card">
+            <a href="https://link-trigon-evo-1.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/6495ED/ffffff?text=Trigon+Evo" class="client-img" alt="Trigon Evo">
                 <div class="client-name">Trigon Evo</div>
                 <div class="btn-play">START</div>
             </a>
 
-            <a href="https://link-trigon-evo-2.com" class="client-card">
+            <a href="https://link-trigon-evo-2.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/7B68EE/ffffff?text=Trigon+Evo" class="client-img" alt="Trigon Evo">
                 <div class="client-name">Trigon Evo</div>
                 <div class="btn-play">START</div>
             </a>
 
-            <a href="https://link-delta-4.com" class="client-card">
+            <a href="https://link-delta-4.com" class="client-card" target="_blank" rel="noopener noreferrer">
                 <img src="https://via.placeholder.com/300x170/4169E1/ffffff?text=Delta" class="client-img" alt="Delta Client">
                 <div class="client-name">Delta Client</div>
                 <div class="btn-play">START</div>
@@ -599,9 +571,12 @@ MediaFire" class="client-card">
             const sunMemberCount = sunBase + Math.floor(Math.random() * 50) - 25; 
             const nakMemberCount = nakBase + Math.floor(Math.random() * 100) - 50; 
 
-            // Cập nhật text, dùng toLocaleString('en-US') để thêm dấu phẩy ngăn cách
-            document.getElementById('sun-members').textContent = sunMemberCount.toLocaleString('en-US') + ' thành viên';
-            document.getElementById('nak-members').textContent = nakMemberCount.toLocaleString('en-US') + ' thành viên';
+            // Sử dụng Intl.NumberFormat để định dạng số theo chuẩn tiếng Việt (dấu chấm)
+            const formatter = new Intl.NumberFormat('vi-VN');
+
+            // Cập nhật text
+            document.getElementById('sun-members').textContent = formatter.format(sunMemberCount) + ' thành viên';
+            document.getElementById('nak-members').textContent = formatter.format(nakMemberCount) + ' thành viên';
         }
 
         // Chạy lần đầu
