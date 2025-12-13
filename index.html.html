@@ -636,7 +636,7 @@
 </head>
 <body>
 
-    <audio id="sfx-click" src="nhạc/tp---sớm-muộn-thì-x-nơi-này-có-anh-pizuh-mashup-lyric-video.mp3"></audio>
+    <audio id="bg-music" src="nhạc/tp---sớm-muộn-thì-x-nơi-này-có-anh-pizuh-mashup-lyric-video.mp3"loop autoplay></audio>>
 
     <div class="anime-bg"></div>
     <div class="grid-overlay"></div>
@@ -1033,10 +1033,10 @@ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b
 </div>
 
     <script>
-        // JS XỬ LÝ CHUYỂN TRANG
+    //  CHUYỂN TRANG (ĐÃ XÓA LỆNH RESET NHẠC)
         function switchPage(pageId, element) {
-            document.getElementById('sfx-click').currentTime = 0;
-            document.getElementById('sfx-click').play().catch(()=>{});
+            // Đã loại bỏ lệnh document.getElementById('sfx-click').currentTime = 0;
+            // và document.getElementById('sfx-click').play().catch(()=>{}); 
 
             // Xóa active cũ
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
@@ -1047,10 +1047,8 @@ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b
             element.classList.add('active');
         }
 
-        // JS COPY CODE
+        //  JS COPY CODE (ĐÃ XÓA LỆNH RESET NHẠC CLICK Ở ĐÂY)
         function copyCode(btn) {
-            document.getElementById('sfx-click').currentTime = 0;
-            document.getElementById('sfx-click').play().catch(()=>{});
             
             const area = btn.parentElement.previousElementSibling;
             area.select();
@@ -1068,11 +1066,31 @@ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b
             }, 1000);
         }
 
-        // Khởi tạo trang đầu tiên
-        document.addEventListener('DOMContentLoaded', () => {
-            switchPage('home', document.querySelector('.nav-btn.active'));
-        });
+        //  KHỞI TẠO VÀ XỬ LÝ NHẠC NỀN
+        document.addEventListener('DOMContentLoaded', function() {
+            var audio = document.getElementById("bg-music"); // Lấy nhạc nền
+            
+            // Cố gắng phát nhạc ngay
+            var playPromise = audio.play();
 
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    // Tự động phát thành công
+                })
+                .catch(error => {
+                    // Nếu trình duyệt chặn (do chưa tương tác), chờ click đầu tiên để phát
+                    document.addEventListener('click', function() {
+                        if (audio.paused) {
+                            audio.play();
+                        }
+                    }, { once: true }); // Sự kiện này chỉ chạy 1 lần
+                });
+            }
+
+            // Khởi tạo trang đầu tiên
+             const homeBtn = document.querySelector('.nav-btn.active') || document.querySelector('.nav-btn');
+             if(homeBtn) switchPage('home', homeBtn);
+        });
     </script>
 </body>
 </html>
