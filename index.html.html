@@ -1,590 +1,1078 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>NAK NO HACK HUB | Roblox Client</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: OVERLORD - Ultimate Anime Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Quicksand:wght@300;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Spectral:wght@400;600&display=swap" rel="stylesheet">
-    
     <style>
-        /*
-        ============================================================
-        * BẢNG MÀU SẮC & CẤU HÌNH BIẾN (Color Palette & Variables)
-        * Chủ đề: Trắng & Xanh Dương Cyber (High Contrast)
-        ============================================================
-        */
+        /* =========================================================================
+           1. RESET & VARIABLES (CẤU HÌNH HỆ THỐNG)
+           ========================================================================= */
         :root {
-            /* MÀU CHÍNH */
-            --primary-color: #ffffff;      /* Trắng tinh khiết */
-            --accent-color: #ffffff;       /* Màu chữ tiêu đề/quan trọng: Trắng */
+            /* --- DÁN LINK ẢNH NỀN CỦA CHỊ VÀO DÒNG DƯỚI NÀY 👇 --- */
+            --bg-image: url('https://i.pinimg.com/736x/f2/14/d1/f214d1c38e70eb641ff77b5ea072c0eb.jpg'); 
             
-            /* MÀU XANH DƯƠNG - CYBER NEON */
-            --cyber-blue: #00e5ff;          /* Xanh Dương Sáng (Electric Blue) */
-            --sky-blue: #4facff;            /* Xanh Dương Trời */
+            --primary: #ff00ff; /* Magenta Neon (Thống trị) */
+            --secondary: #00ffff; /* Cyan Neon (Tương phản) */
+            --accent: #ff8c00; /* Orange Neon (Điểm nhấn) */
+            --bg-dark: #07070f;
+            --glass-bg: rgba(10, 10, 25, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --font-tech: 'Orbitron', sans-serif;
+            --font-head: 'Bebas Neue', sans-serif;
+            --font-body: 'Quicksand', sans-serif;
             
-            /* MÀU NỀN ĐỘ TƯƠNG PHẢN CAO (KHÔNG TRONG SUỐC) */
-            --box-bg: #020b17;              /* Nền Dark Navy/Gần Đen */
+            /* 💥 BIẾN MÀU RGB CHO SHADOW NÂNG CAO */
+            --primary-rgb: 255, 0, 255; 
+            --secondary-rgb: 0, 255, 255;
             
-            /* VIỀN VÀ BÓNG (Edges & Shadows) */
-            --box-border: rgba(255, 255, 255, 0.4); /* Viền Trắng mờ */
-            --neon-glow: 0 0 10px var(--cyber-blue), 0 0 20px var(--sky-blue); /* Ánh sáng Xanh Dương */
+            /* Cấu hình thêm cho hiệu ứng glow */
+            --glow-primary: 0 0 10px var(--primary), 0 0 20px var(--primary);
+            --glow-secondary: 0 0 10px var(--secondary), 0 0 20px var(--secondary);
             
-            /* MÀU RIÊNG BIỆT */
-            --discord-color: #5865F2;       /* Màu Discord */
-            --btn-text-color: #1a1a1a;      /* Màu chữ trên nút: Đen */
+            --primary-dark: #800080; /* Dùng cho shadow 3D của nút */
         }
 
-        /*
-        ============================================================
-        * THIẾT LẬP CHUNG (Global Settings)
-        ============================================================
-        */
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
+        /* Khung chung và Cursor */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            cursor: url('https://cur.cursors-4u.net/games/gam-13/gam1282.png'), auto; 
+            transition: color 0.3s, background 0.3s, box-shadow 0.3s;
         }
 
         body {
-            /* FONT NỘI DUNG DỄ ĐỌC */
-            font-family: 'Spectral', serif;
-            
-            /* BACKGROUND NƯỚC ĐẠI DƯƠNG */
-            background-image: url('https://i.pinimg.com/736x/bf/ce/58/bfce581d8ed653ac34d1159844b835f2.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            
-            color: var(--primary-color);
-            min-height: 100vh;
+            background-color: var(--bg-dark);
+            font-family: var(--font-body);
+            color: var(--text-main);
             overflow-x: hidden;
-            
-            /* ĐỔ BÓNG CHỮ ĐỂ TĂNG ĐỘ NỔI BẬT TRÊN NỀN NƯỚC */
-            text-shadow: 0 0 5px rgba(0, 0, 0, 1), 0 0 8px rgba(0, 0, 0, 0.8); 
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
         }
 
-        /*
-        ============================================================
-        * HIỆU ỨNG BONG BÓNG NỀN (Background Bubbles)
-        ============================================================
-        */
-        .bubbles { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: -1; 
-            pointer-events: none; 
-        }
+        /* Scrollbar Anime */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
 
-        .bubble {
-            position: absolute;
-            bottom: -100px;
-            background: rgba(255, 255, 255, 0.25); /* Bong bóng trắng mờ */
-            border-radius: 50%;
-            animation: rise 15s infinite ease-in;
-            filter: blur(0.5px); /* Tăng blur một chút cho mượt */
-            opacity: 0.9;
-        }
-
-        @keyframes rise {
-            0% { 
-                bottom: -120px; 
-                transform: translateX(0) scale(0.95); 
-                opacity: 0.9; 
-            }
-            33% {
-                transform: translateX(-10px) scale(0.98);
-            }
-            66% {
-                transform: translateX(10px) scale(1.02);
-            }
-            100% { 
-                bottom: 120%; 
-                transform: translateX(-20px) scale(1.05); 
-                opacity: 0; 
-            }
-        }
-
-        /* Thiết lập các bong bóng cụ thể (Duy trì code ban đầu của bạn) */
-        .bubble:nth-child(1) { width: 20px; height: 20px; left: 10%; animation-duration: 9s; }
-        .bubble:nth-child(2) { width: 30px; height: 30px; left: 28%; animation-duration: 13s; animation-delay: 2s; }
-        .bubble:nth-child(3) { width: 15px; height: 15px; left: 60%; animation-duration: 10s; animation-delay: 1s; }
-        .bubble:nth-child(4) { width: 25px; height: 25px; left: 80%; animation-duration: 14s; animation-delay: 4s; }
-        .bubble:nth-child(5) { width: 40px; height: 40px; left: 45%; animation-duration: 18s; animation-delay: 3s; }
-        .bubble:nth-child(6) { width: 18px; height: 18px; left: 5%; animation-duration: 11s; animation-delay: 5s; }
-        .bubble:nth-child(7) { width: 35px; height: 35px; left: 90%; animation-duration: 16s; animation-delay: 6s; }
-        .bubble:nth-child(8) { width: 22px; height: 22px; left: 70%; animation-duration: 12s; animation-delay: 0s; }
-
-
-        /*
-        ============================================================
-        * CẤU TRÚC VÀ HEADER (Layout and Header)
-        ============================================================
-        */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 48px 20px;
-            text-align: center;
-        }
-
-        h1 {
-            /* FONT TIÊU ĐỀ CỔ ĐIỂN */
-            font-family: 'Cinzel', serif; 
-            font-weight: 900; 
-            font-size: 3.5rem; 
-            margin-bottom: 15px; 
-            letter-spacing: 7px; 
-            display: inline-block; 
-            line-height: 1.2;
-        }
-
-        /* HIỆU ỨNG TIÊU ĐỀ 2 MÀU */
-        .nak-text {
-            color: var(--primary-color); /* Trắng */
-            text-shadow: 0 0 10px var(--cyber-blue), 0 0 20px var(--sky-blue);
-            transition: all 0.5s ease;
-        }
-
-        .hub-text {
-            color: var(--cyber-blue); /* Xanh Dương Sáng */
-            text-shadow: 0 0 10px var(--primary-color), 0 0 20px rgba(255, 255, 255, 0.5);
-            margin-left: 10px;
-            transition: all 0.5s ease;
-        }
-        
-        /* HIỆU ỨNG HOVER CHO TIÊU ĐỀ */
-        h1:hover .nak-text {
-            text-shadow: 0 0 15px var(--primary-color), 0 0 30px var(--cyber-blue);
-        }
-        h1:hover .hub-text {
-            text-shadow: 0 0 15px var(--cyber-blue), 0 0 30px var(--primary-color);
-        }
-
-        .subtitle {
-            font-family: 'Spectral', serif;
-            font-size: 1.1rem; 
-            line-height: 1.6;
-            letter-spacing: 0.5px;
-            margin-bottom: 50px; 
-            opacity: 0.95;
-            color: var(--primary-color);
-        }
-
-        /*
-        ============================================================
-        * KHU VỰC DISCORD SERVER (Server Stats Section)
-        ============================================================
-        */
-        .server-stats {
-            display: flex;
-            justify-content: center;
-            gap: 30px; 
-            margin-bottom: 55px;
-            flex-wrap: wrap;
-        }
-
-        .server-box {
-            /* SỬ DỤNG MÀU ĐẶC, KHÔNG TRONG SUỐT */
-            background: var(--box-bg); 
-            
-            border: 2px solid var(--discord-color); 
-            border-radius: 16px; 
-            padding: 35px 45px;
-            min-width: 320px;
-            max-width: 450px;
-            transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease;
-            box-shadow: 0 0 25px rgba(88, 101, 242, 0.8), 0 16px 45px rgba(2, 8, 30, 0.7);
-            text-decoration: none;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-        
-        .server-box::before {
-            content: "";
-            position: absolute;
+        /* NỀN CỐ ĐỊNH */
+        .anime-bg {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-            border-radius: 16px;
-            pointer-events: none;
-        }
-
-        .server-box:hover {
-            transform: translateY(-10px) scale(1.05); 
-            background: #051a30; 
-            box-shadow: 0 0 40px var(--discord-color), 0 25px 70px rgba(2, 8, 30, 0.9);
-        }
-
-        .server-name {
-            font-family: 'Cinzel', serif; 
-            font-weight: 700;
-            font-size: 1.8rem; 
-            margin-bottom: 6px;
-            color: var(--accent-color);
-            text-shadow: 0 0 12px var(--discord-color);
-        }
-
-        .member-count {
-            display: block;
-            font-family: 'Spectral', serif;
-            font-weight: 600;
-            margin-bottom: 18px;
-            font-size: 1.2rem;
-            color: var(--cyber-blue); 
-            text-shadow: 0 0 10px var(--cyber-blue);
-        }
-        
-        .server-info {
-            font-family: 'Spectral', serif;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            opacity: 0.85;
-        }
-
-        .server-cta {
-            display: inline-block;
-            background: linear-gradient(90deg, var(--sky-blue), var(--cyber-blue));
-            padding: 14px 40px; 
-            border-radius: 999px;
-            font-weight: 700;
-            color: var(--btn-text-color);
-            box-shadow: 0 8px 25px rgba(0, 229, 255, 0.5);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            font-family: 'Spectral', serif;
-        }
-        
-        .server-cta:hover {
-            opacity: 0.9;
-        }
-        
-        .server-cta:active {
-            transform: translateY(2px);
-            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.5);
-        }
-
-        /*
-        ============================================================
-        * CHÚ THÍCH CẬP NHẬT (Client Note / Update Box)
-        ============================================================
-        */
-        .client-note {
-            max-width: 800px; 
-            margin: 0 auto 50px auto;
-            font-family: 'Spectral', serif;
-            font-weight: 600;
-            padding: 20px 40px;
-            border-radius: 14px; 
-            
-            /* NỀN ĐẶC */
-            background: var(--box-bg);
-            
-            border: 3px solid var(--cyber-blue); 
-            box-shadow: 0 0 25px var(--cyber-blue), 0 0 50px var(--sky-blue); 
-            
-            color: var(--primary-color);
-            text-shadow: 0 0 8px var(--cyber-blue);
-            font-size: 1.15rem;
-            line-height: 1.7;
-        }
-        
-        .client-note strong {
-            color: var(--cyber-blue);
-        }
-
-        /*
-        ============================================================
-        * DANH SÁCH CLIENT (Client Grid)
-        ============================================================
-        */
-        .client-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-            gap: 30px; 
-            padding-bottom: 60px;
-        }
-
-        .client-card {
-            /* SỬA LỖI: Tất cả các thẻ card đều là thẻ <a> */
-            background: var(--box-bg); 
-            border: 2px solid var(--box-border);
-            border-radius: 14px; 
-            padding: 20px;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2), 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .client-card:hover {
-            background: #051a30;
-            transform: translateY(-7px) scale(1.05);
-            box-shadow: var(--neon-glow);
-            border-color: var(--cyber-blue);
-        }
-
-        .client-card > * { /* Thiết lập lại thuộc tính cho các thành phần con */
-            margin-bottom: 5px;
-            text-align: center;
-        }
-
-        .client-img {
             width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            object-fit: cover;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--cyber-blue);
+            height: 100%;
+            background: var(--bg-image) no-repeat center center/cover;
+            z-index: -2;
+            filter: brightness(0.3); /* Làm tối hơn nữa */
+            animation: bg-zoom 60s infinite alternate;
+        }
+        @keyframes bg-zoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
 
-        .client-name { 
-            font-family: 'Cinzel', serif;
-            font-weight: 700; 
-            margin-bottom: 12px; 
-            color: var(--cyber-blue); 
-            text-shadow: 0 0 10px var(--cyber-blue);
-            font-size: 1.3rem; 
+        /* Lớp phủ lưới công nghệ */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
         }
 
-        .btn-play {
-            margin-top: auto;
-            background: linear-gradient(45deg, var(--sky-blue), var(--cyber-blue));
-            padding: 10px 25px;
-            border-radius: 999px;
-            font-weight: 700;
-            box-shadow: 0 5px 20px rgba(0, 229, 255, 0.6);
-            color: var(--btn-text-color);
-            text-decoration: none;
-            font-size: 1.0rem;
+        /* =========================================================================
+           2. HEADER & NAVIGATION
+           ========================================================================= */
+        header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: var(--glow-primary);
+        }
+
+        .logo i { font-size: 1.8rem; color: var(--secondary); }
+
+        .nav-menu { display: flex; gap: 10px; }
+
+        .nav-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-dim);
+            padding: 10px 20px;
+            font-family: var(--font-tech);
+            font-size: 0.9rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
             transition: all 0.3s ease;
-            font-family: 'Spectral', serif;
-            width: fit-content; /* Đảm bảo nút không kéo giãn 100% */
-        }
-        
-        .btn-play:hover {
-            box-shadow: 0 8px 30px rgba(0, 229, 255, 0.8);
-            transform: scale(1.05);
-        }
-        
-        .btn-play:focus, .server-cta:focus {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 4px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
-        /*
-        ============================================================
-        * FOOTER
-        ============================================================
-        */
-        .footer {
-            font-family: 'Spectral', serif;
-            font-size: 1.0rem; 
-            opacity: 0.8;
-            margin-top: 40px;
-            padding: 20px 0;
-            text-shadow: none;
-            color: var(--primary-color);
-            border-top: 1px solid rgba(255, 255, 255, 0.2); 
+        .nav-btn:hover {
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            box-shadow: var(--glow-primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: var(--bg-dark);
+            font-weight: 900;
+            border: 1px solid var(--primary);
+            box-shadow: var(--glow-primary);
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+        }
+
+        /* =========================================================================
+           3. UI CHUNG & ANIMATION
+           ========================================================================= */
+        .main-container {
+            position: relative;
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 50px;
+            padding-bottom: 80px;
+            z-index: 10;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-title {
+            text-align: center;
+            font-family: var(--font-head);
+            font-size: 5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            color: var(--secondary);
+            text-shadow: var(--glow-secondary);
+            letter-spacing: 8px;
+            animation: text-flicker 1.5s infinite alternate;
+        }
+
+        .hero-subtitle {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+        }
+        
+        @keyframes text-flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.95; text-shadow: var(--glow-secondary); }
+            100% { opacity: 1; }
+        }
+
+
+        /* =========================================================================
+           4. HOME PAGE (BIO KHUNG - ĐÃ CHỈNH SỬA VÀ NÂNG CẤP)
+           ========================================================================= */
+/* CONTAINER: bio-wrapper */
+.bio-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Tinh chỉnh khoảng cách */
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+/* CARD: bio-card */
+.bio-card {
+    /* Kích thước & Nền */
+    width: 450px;
+    background: rgba(0, 0, 0, 0.6); /* Nền tối hẳn, tăng tương phản */
+    backdrop-filter: blur(12px) brightness(1.1); 
+
+    /* Góc cạnh & Đường viền */
+    border: 3px solid var(--primary);
+    border-radius: 15px;
+    padding: 50px 30px;
+    text-align: center;
+
+    /* Shadow & Vị trí */
+    /* Điều chỉnh shadow để trông mạnh mẽ hơn */
+    box-shadow: 0 0 40px rgba(var(--primary-rgb, 255, 0, 255), 0.6), 
+                0 15px 35px rgba(0, 0, 0, 0.7); 
+    position: relative;
+    overflow: hidden;
+    
+    /* Tinh chỉnh Clip-path để trông sắc nét hơn */
+    clip-path: polygon(
+        10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), 
+        calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px
+    );
+
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+/* HIỆU ỨNG TRÊN HOVER */
+.bio-card:hover {
+    transform: scale(1.03); /* Tăng to nhẹ nhàng */
+    border-color: var(--secondary); /* Đổi màu viền khi hover */
+    box-shadow: 0 0 60px rgba(var(--secondary-rgb, 0, 255, 255), 0.9), 
+                0 30px 60px rgba(0, 0, 0, 0.9);
+}
+
+
+/* 💥 HIỆU ỨNG LIGHTNING TẠO CHIỀU SÂU MỚI (SCANNING EFFECT - ::before) */
+/* Thêm hiệu ứng lấp lánh như đang tải dữ liệu */
+.bio-card::before {
+    content: '';
+    position: absolute;
+    top: -100%; left: 0; 
+    width: 100%; height: 50%; /* Dải ánh sáng mảnh */
+    background: linear-gradient(
+        to bottom, 
+        rgba(var(--secondary-rgb), 0.4), 
+        rgba(var(--secondary-rgb), 0.0)
+    );
+    z-index: 1;
+    animation: scan-light 4s linear infinite; /* Animation quét */
+    pointer-events: none;
+    transform: rotate(10deg); /* Xoay nhẹ cho ngầu */
+    filter: blur(2px);
+}
+
+/* HIỆU ỨNG VIỀN ĐÔI NEON (::after) */
+.bio-card::after {
+    content: '';
+    position: absolute;
+    inset: 5px; /* Tạo viền thứ cấp bên trong */
+    border: 1px dotted var(--primary); /* Viền đứt quãng */
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.4s ease;
+    /* Áp dụng lại clip-path để viền đôi theo hình dạng card */
+    clip-path: polygon(
+        10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), 
+        calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px
+    );
+}
+
+.bio-card:hover::after {
+    border-color: var(--accent); /* Đổi màu viền đôi khi hover */
+    opacity: 0.8;
+}
+
+
+/* KEYFRAMES CHO HIỆU ỨNG QUÉT MỚI */
+@keyframes scan-light {
+    0% { transform: translateY(-100%) rotate(10deg); }
+    100% { transform: translateY(200%) rotate(10deg); }
+}
+
+
+/* AVATAR: bio-avatar - CẢI THIỆN */
+.bio-avatar {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 5px dashed var(--secondary); /* Viền nét đứt ngầu hơn */
+    object-fit: cover;
+    margin-bottom: 25px;
+
+    /* Thêm độ sâu cho Avatar */
+    box-shadow: 0 0 15px var(--secondary),
+                0 0 30px rgba(var(--secondary-rgb, 0, 255, 255), 0.5),
+                0 5px 15px rgba(0, 0, 0, 0.5); /* Shadow 3D dưới avatar */
+    z-index: 2; /* Đảm bảo avatar ở trên */
+    position: relative;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bio-card:hover .bio-avatar {
+    border-color: var(--primary); 
+    box-shadow: 0 0 20px var(--primary),
+                0 0 40px rgba(var(--primary-rgb, 255, 0, 255), 0.7),
+                0 5px 15px rgba(0, 0, 0, 0.7);
+}
+
+
+/* NAME & ROLE: bio-name, bio-role - Tăng cường Neon */
+.bio-name {
+    font-family: var(--font-tech);
+    font-size: 2.5rem; 
+    color: var(--secondary);
+    text-shadow: 0 0 8px rgba(var(--secondary-rgb, 0, 255, 255), 0.9),
+                 0 0 15px rgba(var(--secondary-rgb, 0, 255, 255), 0.7); /* Glow mạnh mẽ hơn */
+    margin-bottom: 5px;
+    z-index: 2;
+    position: relative;
+}
+
+.bio-role {
+    font-size: 1.3rem; 
+    color: var(--primary);
+    margin-bottom: 25px; 
+    text-transform: uppercase;
+    letter-spacing: 3px; 
+    font-weight: 700; /* Tăng độ dày */
+    text-shadow: 0 0 5px var(--primary);
+    z-index: 2;
+    position: relative;
+}
+
+/* TEXT: bio-text */
+.bio-text {
+    color: var(--text-dim);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    z-index: 2;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Thêm shadow nhẹ cho text */
+}
+           /* =========================================================================
+            5. CLIENTS PAGE (6 CARDS)
+            ========================================================================= */
+               /* CONTAINER: client-grid */
+.client-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Giảm minmax cho phù hợp với 3 cột */
+    gap: 25px; /* Giảm khoảng cách */
+    padding: 30px;
+}
+
+/* CARD: client-card */
+.client-card {
+    /* Nền: Loại bỏ mờ (blur) và sử dụng nền tối đặc */
+    background: var(--bg-dark); 
+    
+    /* Viền: Sắc nét, đơn giản */
+    border: 1px solid var(--secondary); 
+    border-radius: 6px; 
+    
+    padding: 20px; /* Giảm padding */
+    transition: all 0.3s ease-out; /* Transition nhanh và sạch */
+    position: relative;
+    overflow: hidden;
+    
+    /* Shadow: Đổ bóng nhẹ nhàng, tạo chiều sâu chứ không phải glow */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+}
+
+/* HIỆU ỨNG HOVER */
+.client-card:hover {
+    /* Bỏ glow, chỉ tập trung vào viền và độ sâu */
+    border-color: var(--accent);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6); 
+    transform: translateY(-5px); /* Nâng lên một cách tinh tế */
+}
+
+/* KHUNG ẢNH (HEADER) - client-image */
+.client-image {
+    width: calc(100% + 40px); /* Bù trừ padding 20px mỗi bên */
+    height: 140px; 
+    background-color: var(--bg-dark-light); /* Màu nền header tối hơn/sáng hơn nền card */
+    
+    /* Thay thế viền dưới bằng đường line mỏng */
+    border-bottom: 2px solid var(--secondary); 
+    
+    /* Kéo ảnh sát lề card */
+    margin: -20px -20px 20px -20px; 
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    position: relative;
+}
+
+.client-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6; /* Giảm opacity ảnh */
+    filter: grayscale(80%); /* Chuyển sang ảnh đen trắng */
+    transition: 0.5s;
+}
+
+.client-card:hover .client-image img {
+    opacity: 1;
+    filter: grayscale(0%); /* Trở lại ảnh màu khi hover */
+    transform: scale(1.05);
+}
+
+/* ICON TRONG KHUNG ẢNH */
+.client-image .card-icon {
+    font-size: 3rem; 
+    color: var(--secondary);
+    z-index: 2;
+    position: absolute; /* Đặt icon lên trên ảnh */
+    opacity: 0.8;
+}
+
+/* VERSION TAG (PRO/LITE) */
+.client-card::after {
+    content: attr(data-version);
+    position: absolute;
+    top: 0; right: 0;
+    
+    /* Màu sắc đơn giản, không neon */
+    background: var(--accent); 
+    color: var(--bg-dark);
+    padding: 5px 12px; 
+    font-weight: bold; 
+    font-family: var(--font-tech);
+    letter-spacing: 1px;
+    
+    /* Góc cắt đơn giản hơn */
+    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%); 
+    z-index: 10;
+}
+
+/* TITLE: client-title (Giữ nguyên cấu trúc nhưng tinh chỉnh màu sắc) */
+.client-title {
+    font-family: var(--font-tech);
+    font-size: 1.5rem; /* Giảm kích thước tên */
+    color: var(--text-main); /* Màu chữ sạch sẽ */
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* DESCRIPTION: client-desc */
+.client-desc {
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+
+/* BUTTON: btn-client-action */
+.btn-client-action {
+    display: inline-block;
+    padding: 8px 18px; /* Giảm padding nút */
+    background: var(--primary);
+    color: var(--bg-dark);
+    font-family: var(--font-tech);
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 3px;
+    
+    /* Shadow 3D tinh tế */
+    box-shadow: 0 3px 0 var(--primary-dark); 
+    transition: all 0.2s;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.btn-client-action:hover {
+    transform: translateY(-1px); 
+    box-shadow: 0 4px 0 var(--primary-dark);
+    filter: brightness(1.1);
+}
+        /* =========================================================================
+           6. SCRIPTS PAGE (80 CARDS)
+           ========================================================================= */
+        .script-terminal-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Chỉ 1 cột để code nhìn dài hơn */
+            gap: 20px;
+        }
+
+        .script-terminal {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+            transition: 0.2s;
+        }
+        
+        .script-terminal:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .terminal-header {
+            background: rgba(255, 140, 0, 0.15);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--accent);
+        }
+
+        .terminal-title { 
+            color: var(--accent); 
+            font-family: var(--font-tech); 
+            font-weight: bold; 
+            font-size: 0.9rem;
             letter-spacing: 1px;
         }
 
-        /*
-        ============================================================
-        * RESPONSIVE DESIGN (Thiết kế cho di động)
-        ============================================================
-        */
-        @media (max-width: 992px) {
-            h1 { font-size: 3rem; letter-spacing: 5px; }
-            .nak-text, .hub-text { margin-left: 5px; }
-            .container { padding: 30px 15px; }
-            .server-stats { gap: 20px; margin-bottom: 40px; }
-            .server-box { min-width: 90%; padding: 30px; }
-            .client-note { max-width: 100%; padding: 15px 25px; font-size: 1.05rem; }
-            .client-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .code-area {
+            width: 100%;
+            height: 100px; /* Chiều cao cố định */
+            background: transparent;
+            color: #0f0; 
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            padding: 15px;
+            border: none;
+            resize: none;
+            line-height: 1.4;
+            overflow: hidden; /* Giấu bớt code để nhìn gọn */
+        }
+        
+        .code-area:focus { outline: none; }
+
+        .copy-bar {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid var(--accent);
+            display: flex;
+            justify-content: flex-end;
         }
 
-        @media (max-width: 720px) {
-            h1 { font-size: 2.2rem; letter-spacing: 2px; }
-            .nak-text, .hub-text { margin-left: 2px; display: block; } /* Đưa về 2 dòng trên mobile */
-            .subtitle, .member-count, .server-info, .client-note, .client-name, .btn-play, .server-cta, .footer {
-                font-size: 0.9rem; 
-            }
-            .server-name { font-size: 1.5rem; }
-            .server-box { min-width: 100%; padding: 25px; }
-            .client-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .client-name { font-size: 1.1rem; }
-            .btn-play { font-size: 0.9rem; padding: 8px 18px; }
+        .btn-copy {
+            background: var(--secondary);
+            color: var(--bg-dark);
+            border: none;
+            padding: 8px 25px;
+            font-family: var(--font-tech);
+            cursor: pointer;
+            font-size: 0.8rem;
+            box-shadow: var(--glow-secondary);
+        }
+
+        .btn-copy:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 20px var(--secondary);
+        }
+
+        /* ==========================================================================
+           7. COMMUNITY SECTION (4 KHUNG MỚI)
+           ========================================================================== */
+        .community-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .community-card {
+            background: var(--glass-bg);
+            border: 2px solid var(--accent);
+            padding: 30px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .community-card:hover {
+            box-shadow: 0 0 30px var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .community-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .community-title {
+            font-family: var(--font-tech);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* =========================================================================
+           8. MEDIA QUERIES (RESPONSIVE)
+           ========================================================================= */
+        @media (max-width: 992px) {
+            header { padding: 0 20px; }
+            .logo { font-size: 1.5rem; letter-spacing: 3px; }
+            .nav-menu { gap: 5px; }
+            .nav-btn { padding: 8px 12px; font-size: 0.8rem; }
+            .hero-title { font-size: 3rem; }
+            .bio-wrapper { flex-direction: column; align-items: center; }
+            .bio-card { width: 90%; }
+            .client-grid { padding: 0; }
         }
 
     </style>
 </head>
 <body>
 
-    <div class="bubbles">
-        <div class="bubble" style="width:20px; height:20px; left:10%; animation-duration:9s;animation-delay:2s"></div>
-        <div class="bubble" style="width:30px; height:30px; left:28%; animation-duration:13s; animation-delay:2s;"></div>
-        <div class="bubble" style="width:15px; height:15px; left:60%; animation-duration:10s; animation-delay:1s;"></div>
-        <div class="bubble" style="width:25px; height:25px; left:80%; animation-duration:14s; animation-delay:4s;"></div>
-        <div class="bubble" style="width:40px; height:40px; left:45%; animation-duration:18s; animation-delay:3s;"></div>
-        <div class="bubble" style="width:18px; height:18px; left:5%; animation-duration:11s; animation-delay:5s;"></div>
-        <div class="bubble" style="width:35px; height:35px; left:90%; animation-duration:16s; animation-delay:6s;"></div>
-        <div class="bubble" style="width:22px; height:22px; left:70%; animation-duration:12s; animation-delay:0s;"></div>
+    <audio id="sfx-click" src="nhạc/tp---sớm-muộn-thì-x-nơi-này-có-anh-pizuh-mashup-lyric-video.mp3"></audio>
+
+    <div class="anime-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-terminal"></i>
+            <span>NAK NO HACK</span>
+     </div>
+    <div class="nav-menu">
+        <button class="nav-btn active" onclick="switchPage('home', this)">TRANG CHỦ</button>
+        <button class="nav-btn" onclick="switchPage('clients', this)">CLIENT</button>
+        <button class="nav-btn" onclick="switchPage('scripts', this)">SCRIPT</button>
+        <button class="nav-btn" onclick="switchPage('community', this)">DISCORD</button>
     </div>
+</header>
 
-    <div class="container">
-        <h1><span class="nak-text">NAK NO HACK</span> <span class="hub-text">HUB</span></h1>
-        <p class="subtitle">Khám phá sức mạnh Roblox Client dưới đáy đại dương — Cập nhật mới nhất trên Discord</p>
+<div class="main-container">
+    <section id="home" class="page-section active">
+        <h1 class="hero-title">TRANG CHỦ</h1>
+        <div class="hero-subtitle">VÔ MÀ LỤM CÁI GIẢI</div>
 
-        <div class="server-stats">
-            <a href="https://discord.gg/DxHFtbn6aX" target="_blank" rel="noopener noreferrer" class="server-box discord-box" aria-label="Nhà trẻ SUN Discord">
-                <span class="server-name">NHÀ TRẺ SUN</span>
-                <span class="member-count" id="sun-members">1.752 thành viên</span>
-                <span class="server-info">Cộng đồng tập trung hỗ trợ và chia sẻ</span>
-                <span class="server-cta">Tham gia ngay</span>
-            </a>
+        <div class="bio-wrapper">
+            
+            <div class="bio-card">
+                <img src="ẢNH/image.webp" class="bio-avatar" alt="Owner">
+                <div class="bio-name">HẢI YẾN</div>
+                <div class="bio-role">CÀY THUÊ GIÁ RẺ</div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 15px; justify-content: center;">
+                     <a href="https://facebook.com/Sunnixkissyou" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook" style="font-size: 1.7rem; color: #1877f2; transition: 0.3s;"></i>
+                     </a>
+                    <a href="https://www.tiktok.com/@daily.giveways.3" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok" style="font-size: 1.7rem; color: #ff0055; transition: 0.3s;"></i>
+                    </a>
+                    <a href="https://discord.gg/aZ4AD9vfxg" target="_blank" title="Discord">
+                        <i class="fab fa-discord" style="font-size: 1.7rem; color: #7289da; transition: 0.3s;"></i>
+                    </a>
+                </div>
+                
+                <div class="bio-text" style="width: 80%; margin: 20px auto 0 auto; line-height: 1.6; font-size: 0.95rem;">
+                    CÀY THUÊ , BÁN ACC TẠI SERVER NHOI X NAK 
+                </div>
+            </div>
 
-            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" rel="noopener noreferrer" class="server-box discord-box" aria-label="Nhoi X Nak Discord">
-                <span class="server-name">Nhoi X Nak</span>
-                <span class="member-count" id="nak-members">4.981 thành viên</span>
-                <span class="server-info">Kênh Discord chính thức của NAK NO HACK</span>
-                <span class="server-cta">Tham gia ngay</span>
-            </a>
+            <div class="bio-card">
+                <img src="ẢNH/FB_IMG_1763383517877.webp" class="bio-avatar" alt="Admin">
+                <div class="bio-name">NAK NO HACK</div>
+                <div class="bio-role">cô nàng đáng iu</div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 15px; justify-content: center;">
+                    <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok" style="font-size: 1.7rem; color: #ff0055; transition: 0.3s;"></i>
+                    </a>
+                    <a href="https://discord.gg/vtgWe5V9bd" target="_blank" title="Discord">
+                        <i class="fab fa-discord" style="font-size: 1.7rem; color: #7289da; transition: 0.3s;"></i>
+                    </a>
+                </div>
+                
+                <div class="bio-text" style="width: 80%; margin: 20px auto 0 auto; line-height: 1.6; font-size: 0.95rem;">
+                    GÁI ĐẸP NHẤT SERVER 
+                </div>
+            </div>
+
+            <div class="bio-card">
+                <img src="ẢNH/NHOI.webp" class="bio-avatar" alt="Keymaster">
+                <div class="bio-name">NHOI</div>
+                <div class="bio-role">BANNER</div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 15px; justify-content: center;">
+                    <a href="https://www.tiktok.com/@nhoiii_dev?_r=1&_t=ZS-92BaCnOEBOS" target="_blank" title="TikTok">
+                        <i class="fab fa-tiktok" style="font-size: 1.7rem; color: #ff0055; transition: 0.3s;"></i>
+                    </a>
+                    <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" title="Discord">
+                        <i class="fab fa-discord" style="font-size: 1.7rem; color: #7289da; transition: 0.3s;"></i>
+                    </a>
+                </div>
+                
+                <div class="bio-text" style="width: 80%; margin: 20px auto 0 auto; line-height: 1.6; font-size: 0.95rem;">
+                    ĐẸP TRAI NHẤT SIVI
+                </div>
+            </div>
+            
+            <div class="bio-card">
+                <img src="ẢNH/IMG_0873.webp" class="bio-avatar" alt="Moderator">
+                <div class="bio-name">SUN MEDIA</div>
+                <div class="bio-role">ĐẸP TRAI MIỀN TÂY </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 15px; justify-content: center;">
+                    <a href="https://www.facebook.com/share/1BeKF5sQ88/?mibextid=wwXIfr" target="_blank" title="Facebook">
+                        <i class="fab fa-facebook" style="font-size: 1.7rem; color: #1877f2; transition: 0.3s;"></i>
+                    </a>
+                    <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" title="Discord">
+                        <i class="fab fa-discord" style="font-size: 1.7rem; color: #7289da; transition: 0.3s;"></i>
+                    </a>
+                </div>
+                
+                <div class="bio-text" style="width: 80%; margin: 20px auto 0 auto; line-height: 1.6; font-size: 0.95rem;">
+                  BUÔN BÁN QUẦN ÁO TẠI MIỀN TÂY -_-
+                </div>
+            </div>
+
         </div>
-        
-        <div class="client-note">
-            🎉 **Update:** AI MUỐN CÀY THUÊ THÌ VÀO DISCORD ĐẶT NHÉ !!!!!
-        </div>
+    </section>
+
+    <section id="clients" class="page-section">
+        <h1 class="hero-title">EXECUTORS</h1>
+        <div class="hero-subtitle">tự vô mà lấy?</div>
 
         <div class="client-grid">
             
-            <a href="https://www.mediafire.com/file/vbcghiry48yfhig/Delta%C3%97VNG_Font_Th%C6%B0%E1%BB%9Dng%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG 2.701">
-                <div class="client-name">Delta×VNG 2.701</div>
-                <div class="btn-play">Ấn vào tải</div>
-            </a>
+                <div class="client-card" data-version="V2.702">
+                    <div class="client-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" alt="DELTA VNG X 2.702"> 
+                    </div>
+                
+                <div class="client-title">DELTA VNG X 2.702 </div>
+                <div class="client-desc">naknohub.</div>
+                <a href="https://www.mediafire.com/file/vbcghiry48yfhig/Delta%25C3%2597VNG_Font_Th%25C6%25B0%25E1%25BB%259Dng%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="btn-client-action">Nhấn vô tải </a>
+            </div>
 
-            <a href="https://www.mediafire.com/file/qi4rupnnj0utgy3/Delta%C3%97VNG_Font_Minecraft%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" class="client-img" alt="Delta×VNG Font Minecraft 2.701">
-                <div class="client-name">Delta×VNG Font Minecraf2.701</div>
-                <div class="btn-play">Ấn vào để tải</div>
-            </a> <a href="https://www.mediafire.com/file/t1boyn5izcjuppb/Delta%C3%97VNG_Font_V%E1%BB%87t_S%C6%A1n%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://s3-eu-west-1.amazonaws.com/tpd/logos/6547387064519ebed7df6a08/0x0.png" class="client-img" alt="Delta×VNG Font Vệt Sơn 2.701">
-                <div class="client-name">Delta×VNG Font Vệt Sơn 2.701</div>
-                <div class="btn-play">Ấn vào để tải</div>
-            </a>
+              <div class="client-card" data-version="V2.702">
+                 <div class="client-image">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" alt="DELTA VNG X 2.702 FONT MINECRAFT"> 
+                    </div>
+                <div class="client-title">DELTA VNG X 2.702 FONT MINECRAFT</div>
+                <div class="client-desc">Client mới nhất. Giao diện đẹp, dễ sử dụng. Cực kỳ ổn định trên các máy cấu hình yếu.</div>
+                <a href="#" class="btn-client-action">Nhấn vô tải </a>
+            </div>
 
-            <a href="https://www.mediafire.com/file/7y4eoezavcorz4s/Codex+VNG+V2.700(64bit).apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486911580504075/images.jpg?ex=6934296a&is=6932d7ea&hm=ce7304b4da122028463068b2c57493b2e17a425a4954b4095ebaf6ae5d7ea6ce&=&format=webp&width=225&height=225" class="client-img" alt="Codex VNG">
-                <div class="client-name">Code×VNG</div>
-                <div class="btn-play">Ấn vào tải</div>
-            </a>
-
-            <a href="https://www.mediafire.com/file/syfsk4ktulqnm5k/Arceus_VNG_V2.700%252864bit%2529.apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486910838247444/images_1.jpg?ex=69342969&is=6932d7e9&hm=fda1cb94bc8294946c3b285e332f631b92c8e52c2b756b11d5d02bb5f22ee33e&=&format=webp&width=416&height=416" class="client-img" alt="Arceus×VNG">
-                <div class="client-name">Arceus×VNG</div>
-                <div class="btn-play">Ấn vào tải</div>
-            </a>
-
-            <a href="https://www.mediafire.com/file/90sbpa89qzbt17l/FluxusZ+VNG+V2.700(64bit).apk/file" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://media.discordapp.net/attachments/1437066640394289273/1446486911190565027/hqdefault.jpg?ex=6934296a&is=6932d7ea&hm=e265f0629f88a88b81f9a0dd8293bfdc3961fa634abcf4881a5707d084f55a28&=&format=webp&width=360&height=270" class="client-img" alt="Fluxusz×VNG">
-                <div class="client-name">Fluxusz×VNG</div>
-                <div class="btn-play">Ấn vào tải</div>
-            </a>
-
-            <a href="https://link-delta-3.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/87CEFA/ffffff?text=Delta" class="client-img" alt="Delta Client">
-                <div class="client-name">Delta Client</div>
-                <div class="btn-play">GET KEY</div>
-            </a>
-
-            <a href="https://link-trigon-tan.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/00BFFF/ffffff?text=Trigon+tan" class="client-img" alt="Trigon tan">
-                <div class="client-name">Trigon tan</div>
-                <div class="btn-play">GET KEY</div>
-            </a>
+              <div class="client-card" data-version="V2.702">
+                 <div class="client-image">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_e74GbcMnANo6-fpeEcrDG9bIuKPCTG3K0A&s" alt="DELTA VNG X 2.702 FONT MINECRAFT"> 
+                    </div>
+                <div class="client-title">DELTA VNG X 2.702 FONT VIỆT</div>
+                <div class="client-desc">Client chuyên biệt cho Android. Bypass các hệ thống chống hack hiệu quả.</div>
+                <a href="#" class="btn-client-action"> Nhấn vô tải </a>
+            </div>
             
-            <a href="https://link-origen-evo.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/1E90FF/ffffff?text=Origen+Evo" class="client-img" alt="Origen Evo">
-                <div class="client-name">Origen Evo</div>
-                <div class="btn-play">GET KEY</div>
-            </a>
+            <div class="client-card" data-version="PRO">
+                <div class="client-image">
+                     <i class="fas fa-link card-icon" style="color: var(--accent);"></i>
+                </div>
+                <div class="client-title">VEGA HUB</div>
+                <div class="client-desc">Bộ client hợp nhất. Chạy được script không mã hóa (unencrypted) mà không cần key.</div>
+                <a href="#" class="btn-client-action">GET KEY</a>
+            </div>
 
-            <a href="https://link-trigon-evo-1.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/6495ED/ffffff?text=Trigon+Evo" class="client-img" alt="Trigon Evo">
-                <div class="client-name">Trigon Evo</div>
-                <div class="btn-play">START</div>
-            </a>
+            <div class="client-card" data-version="LITE">
+                <div class="client-image">
+                     <i class="fas fa-battery-half card-icon" style="color: var(--primary);"></i>
+                </div>
+                <div class="client-title">KRNL</div>
+                <div class="client-desc">Executable miễn phí, đáng tin cậy. Thích hợp cho người dùng mới bắt đầu.</div>
+                <a href="#" class="btn-client-action">GET KEY</a>
+            </div>
 
-            <a href="https://link-trigon-evo-2.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/7B68EE/ffffff?text=Trigon+Evo" class="client-img" alt="Trigon Evo">
-                <div class="client-name">Trigon Evo</div>
-                <div class="btn-play">START</div>
-            </a>
-
-            <a href="https://link-delta-4.com" class="client-card" target="_blank" rel="noopener noreferrer">
-                <img src="https://via.placeholder.com/300x170/4169E1/ffffff?text=Delta" class="client-img" alt="Delta Client">
-                <div class="client-name">Delta Client</div>
-                <div class="btn-play">START</div>
-            </a>
+            <div class="client-card" data-version="PC 4.0">
+                <div class="client-image">
+                    <i class="fas fa-rocket card-icon" style="color: var(--secondary);"></i>
+                </div>
+                <div class="client-title">SYNAPSE X</div>
+                <div class="client-desc">Client trả phí. Sức mạnh tuyệt đối, bảo mật cao cấp. Dành cho Pro player.</div>
+                <a href="#" class="btn-client-action">BUY ACCESS</a>
+            </div>
 
         </div>
-        <div class="footer">
-            Designed for Roblox Community | NAK NO HACK Theme
+    </section>
+
+    <section id="scripts" class="page-section">
+        <h1 class="hero-title">SCRIPT </h1>
+        <div class="hero-subtitle">SCRIPT SẼ ĐƯỢC CẬP NHẬT MỖI NGÀY</div>
+        
+        <div class="script-terminal-grid">
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Quantum hub</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Teddy hub hop boss</div></div>
+                <textarea class="code-area" spellcheck="false">repeat task.wait() until game:IsLoaded() and game:GetService("Players") and game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TEDDYHUB-FREEMIUM"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">NIGHT MYSTIC V2</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://pastefy.app/B6YlbRFj/raw"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">XETER V1 </div></div>
+                <textarea class="code-area" spellcheck="false">getgenv().Version = "V1"
+getgenv().Team = "Marines"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))() 
+</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Xeter V4:</div></div>
+                <textarea class="code-area" spellcheck="false">getgenv().Version = "V4"
+getgenv().Team = "Marines"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">OK Hub Blox Fruit:</div></div>
+                <textarea class="code-area" spellcheck="false">getgenv().team = "Pirates" -- "Marines" 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/fakekuri/Okhubhere/refs/heads/main/MainBloxFruit.lua"))() </textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Hinishi Hub</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-Hinishi/Hinishi-Hub/refs/heads/main/BetaVersion.lua"))() </textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">King Rua Hub</div></div>
+                <textarea class="code-area" spellcheck="false">repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/shinichi-dz/phucshinyeuem/refs/heads/main/KingRuaHub.lua"))() </textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Teddy Hub</div></div>
+                <textarea class="code-area" spellcheck="false">repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Teddyseetink/Haidepzai/refs/heads/main/TeddyHub.lua"))() 
+</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Teddy Hub  Kaitun:</div></div>
+                <textarea class="code-area" spellcheck="false">repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+getgenv().Configs = {
+    ["Quest"] = {
+        ["Evo Race V1"] = true;
+        ["Evo Race V2"] = true;
+        ["RGB Haki"] = true;
+        ["Pull Lerver"] = true;
+    };
+    Sword = {
+        "Dual-Headed Blade";
+        "Smoke Admiral";
+        "Wardens Sword";
+        "Cutlass";
+        "Katana";
+        "Dual Katana";
+        "Triple Katana";
+        "Iron Mace";
+        "Saber";
+        "Pole (1st Form)";
+        "Gravity Blade";
+        "Longsword";
+        "Rengoku";
+        "Midnight Blade";
+        "Soul Cane";
+        "Bisento";
+        "Yama";
+        "Tushita";
+        "Cursed Dual Katana";
+    };
+    Gun = {
+        "Soul Guitar";
+        "Kabucha";
+        "Venom Bow";
+        "Musket";
+        "Flintlock";
+        "Refined Slingshot"; 
+        "Magma Blaster";
+        "Dual Flintlock";
+        "Cannon";
+        "Bizarre Revolver";
+        "Bazooka";
+    };
+    ["FPS Booster"] = false;
+};
+loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/8cffffd967953fe7"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Rubu Hub V5:</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/Bubu2k/Rubutv/refs/heads/main/rubuhubV5Y.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Redz Hub Campuchia V3</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/huy384/redzHub/refs/heads/main/redzHub.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Đạt thg</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/DatThg/refs/heads/main/DatThgV2Vn"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Auto lấy Cyborg</div></div>
+                <textarea class="code-area" spellcheck="false">getgenv().Team = "Marines"
+getgenv().Get_Race = "Cyborg"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b3e1e7207c5d11ed755.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title"> Auto lấy Ghoul:</div></div>
+                <textarea class="code-area" spellcheck="false">getgenv().Team = "Marines"
+getgenv().Get_Race = "Ghoul"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b3e1e7207c5d11ed755.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Teddy Hub auto race ghoul + up v2,v3</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/98663465d41d463c"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">TDT Hub </div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/TDS/Win/main.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Gravity Hub</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">Speed Hub </div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            
+            <div class="script-terminal">
+                <div class="terminal-header"><div class="terminal-title">HoHo Hub</div></div>
+                <textarea class="code-area" spellcheck="false">loadstring(game:HttpGet("https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"))()</textarea>
+                <div class="copy-bar"><button class="btn-copy" onclick="copyCode(this)">COPY DATA</button></div>
+            </div>
+            <div class="script-terminal">
+
+    </section>
+
+    <section id="community" class="page-section">
+        <h1 class="hero-title" style="font-size: 3rem;">SERVER DICORD</h1>
+        <div class="hero-subtitle">HẢI BEL ƠI</div>
+        
+        <div class="community-grid">
+            
+            <div class="community-card">
+                <i class="fab fa-discord community-icon" style="color: #7289da;"></i>
+                <div class="community-title" style="color: #7289da;">𝐍𝐀𝐊&𝐍𝐇𝐎𝐈𝐈𝐈 𝐁𝐚̂́𝐭 𝐨̂̉𝐧 𝐂𝐨𝐦𝐦𝐮𝐧𝐢𝐭𝐲</div>
+                <div class="card-desc" style="color: var(--text-dim); line-height: 1.6;">IU THẾ.</div>
+                <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="btn-client-action" style="margin-top: 20px; background: #7289da; color: #fff; box-shadow: 0 3px 0 #4a5a9e;">JOIN CHAT</a>
+                </div>
+
+            <div class="community-card">
+                <i class="fab fa-discord community-icon" style="color: #7289da;"></i>
+                <div class="community-title" style="color: #7289da;"> 𝐍𝐇𝐀̀ 𝐓𝐑𝐄̉ 𝐒𝐔𝐍</div>
+                <div class="card-desc" style="color: var(--text-dim); line-height: 1.6;">IU THẾ.</div>
+                <a href="https://discord.gg/DxHFtbn6aX" target="_blank" class="btn-client-action" style="margin-top: 20px; background: #7289da; color: #fff; box-shadow: 0 3px 0 #4a5a9e;">JOIN CHAT</a>
+                </div>
+
+
+            <div class="community-card">
+                <i class="fab fa-discord community-icon" style="color: #7289da;"></i>
+                <div class="community-title" style="color: #7289da;"> Zenox Community</div>
+                <div class="card-desc" style="color: var(--text-dim); line-height: 1.6;">IU THẾ.</div>
+                <a href="https://discord.gg/UxPj6TeWgY" target="_blank" class="btn-client-action" style="margin-top: 20px; background: #7289da; color: #fff; box-shadow: 0 3px 0 #4a5a9e;">JOIN CHAT</a>
+                </div>
+            <div class="community-card">
+                <i class="fab fa-discord community-icon" style="color: #7289da;"></i>
+                <div class="community-title" style="color: #7289da;">IOS COMMUNITY</div>
+                <div class="card-desc" style="color: var(--text-dim); line-height: 1.6;">IU THẾ.</div>
+                <a href="https://discord.gg/aMdB6nNbx3" target="_blank" class="btn-client-action" style="margin-top: 20px; background: #7289da; color: #fff; box-shadow: 0 3px 0 #4a5a9e;">JOIN CHAT</a>
+                </div>
+
         </div>
-    </div>
+    </section>
+</div>
 
     <script>
-        //
-        // HÀM GIẢ LẬP CẬP NHẬT SỐ THÀNH VIÊN DISCORD
-        //
-        function updateMemberCounts() {
-            // Số thành viên GIẢ LẬP (Mock data)
-            const sunBase = 1752;
-            const nakBase = 4981;
+        // JS XỬ LÝ CHUYỂN TRANG
+        function switchPage(pageId, element) {
+            document.getElementById('sfx-click').currentTime = 0;
+            document.getElementById('sfx-click').play().catch(()=>{});
+
+            // Xóa active cũ
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
-            // Tạo sự thay đổi nhỏ ngẫu nhiên
-            const sunMemberCount = sunBase + Math.floor(Math.random() * 50) - 25; 
-            const nakMemberCount = nakBase + Math.floor(Math.random() * 100) - 50; 
-
-            // Sử dụng Intl.NumberFormat để định dạng số theo chuẩn tiếng Việt (dấu chấm)
-            const formatter = new Intl.NumberFormat('vi-VN');
-
-            // Cập nhật text
-            document.getElementById('sun-members').textContent = formatter.format(sunMemberCount) + ' thành viên';
-            document.getElementById('nak-members').textContent = formatter.format(nakMemberCount) + ' thành viên';
+            // Thêm active mới
+            document.getElementById(pageId).classList.add('active');
+            element.classList.add('active');
         }
 
-        // Chạy lần đầu
-        updateMemberCounts();
+        // JS COPY CODE
+        function copyCode(btn) {
+            document.getElementById('sfx-click').currentTime = 0;
+            document.getElementById('sfx-click').play().catch(()=>{});
+            
+            const area = btn.parentElement.previousElementSibling;
+            area.select();
+            document.execCommand('copy');
+            
+            const originalText = btn.innerText;
+            btn.innerText = "COPIED!";
+            btn.style.background = "var(--primary)";
+            btn.style.color = "var(--bg-dark)";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "var(--secondary)";
+                btn.style.color = "var(--bg-dark)";
+            }, 1000);
+        }
 
-        // Chạy lại mỗi 2 giây (2000ms) để thấy hiệu ứng cập nhật số liệu.
-        setInterval(updateMemberCounts, 2000);
+        // Khởi tạo trang đầu tiên
+        document.addEventListener('DOMContentLoaded', () => {
+            switchPage('home', document.querySelector('.nav-btn.active'));
+        });
+
     </script>
-
 </body>
 </html>
