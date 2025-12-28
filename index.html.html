@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAK HUB - MEDIA </title>
+    <title>NAK HUB - MEDIA</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        /* ==========================================================================
-           1. CORE CONFIGURATION (CẤU HÌNH HỆ THỐNG)
-           ========================================================================== */
+        /* ============================================================
+           CORE SYSTEM - HỆ THỐNG NỀN TẢNG
+        ============================================================ */
         :root {
-            /* MÀU SẮC CHỦ ĐẠO (LANDSCAPE THEME) */
-            --bg-wallpaper: url('https://i.pinimg.com/originals/45/e7/75/45e7758a0656fa69133a23f84dbca389.gif');
+            --bg-wallpaper: url('https://i.pinimg.com/originals/51/8b/ee/518bee633dc68f1351b92dda304f8db1.gif');
             
-            --primary-dark: #0f0f1a;
+            --primary-dark: #0a0a15;
             --primary-light: #ffffff;
-            --accent-blue: #0984e3;
-            --accent-purple: #6c5ce7;
+            --accent-blue: #667eea;
+            --accent-purple: #764ba2;
+            --accent-pink: #f093fb;
             --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --glass-bg: rgba(20, 20, 35, 0.7);
+            --glass-border: rgba(102, 126, 234, 0.3);
+            --glass-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
             
-            --card-bg: #ffffff;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
+            --card-bg: #1a1a2e;
+            --text-main: #ffffff;
+            --text-sub: #b2bec3;
             --text-light: #dfe6e9;
 
             --font-display: 'Montserrat', sans-serif;
@@ -37,14 +38,12 @@
             --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* RESET MẶC ĐỊNH */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             outline: none;
             -webkit-tap-highlight-color: transparent;
-            cursor: url('https://cur.cursors-4u.net/games/gam-13/gam1282.png'), auto;
         }
 
         body {
@@ -54,1436 +53,2576 @@
             overflow-x: hidden;
             min-height: 100vh;
             line-height: 1.6;
+            cursor: url('https://cur.cursors-4u.net/games/gam-13/gam1282.png'), auto;
         }
 
-        /* SCROLLBAR CUSTOM CAO CẤP */
-        ::-webkit-scrollbar { width: 8px; }
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { 
             background: var(--accent-gradient); 
-            border-radius: 10px; 
-            border: 2px solid #000;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-gradient-2);
         }
 
-        /* ==========================================================================
-           2. BACKGROUND & CANVAS ENGINE
-           ========================================================================== */
-        /* Lớp nền ảnh tĩnh */
+        /* ============================================================
+           BACKGROUND LAYERS - LỚP NỀN
+        ============================================================ */
         .fixed-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: var(--bg-wallpaper) no-repeat center center/cover;
             z-index: -5;
-            filter: brightness(0.4) blur(4px); /* Blur nhẹ tạo độ sâu */
-            transform: scale(1.1); /* Zoom nhẹ để tránh viền khi blur */
+            filter: brightness(0.3) blur(5px);
+            transform: scale(1.1);
         }
 
-        /* Canvas cho hiệu ứng hạt (Particles) */
         #particle-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -4;
             pointer-events: none;
         }
 
-        /* Lớp phủ lưới (Grid Overlay) */
         .grid-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+                linear-gradient(rgba(102, 126, 234, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
             z-index: -3;
             pointer-events: none;
+            animation: gridMove 20s linear infinite;
         }
 
-        /* ==========================================================================
-           3. HEADER & NAVIGATION (GLASSMORPHISM)
-           ========================================================================== */
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 50px 50px; }
+        }
+
+        /* ============================================================
+           HEADER & NAVIGATION - THANH ĐIỀU HƯỚNG
+        ============================================================ */
         header {
-            position: sticky; top: 20px;
-            width: 92%; max-width: 1400px;
-            margin: 0 auto; height: 80px;
-            background: rgba(15, 15, 25, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 40px;
+            position: sticky;
+            top: 20px;
+            width: 95%;
+            max-width: 1600px;
+            margin: 0 auto;
+            height: 90px;
+            background: rgba(15, 15, 30, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 2px solid var(--glass-border);
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px;
             z-index: 1000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            box-shadow: var(--glass-shadow);
             transition: all 0.3s ease;
         }
 
+        header:hover {
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
         .brand-container {
-            display: flex; align-items: center; gap: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .logo-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
-            color: transparent;
-            animation: pulse 3s infinite;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6));
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .brand-text h1 {
             font-family: var(--font-display);
-            font-size: 1.5rem; font-weight: 800;
-            color: #fff; letter-spacing: 1px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
             line-height: 1;
-        }
-        .brand-text span {
-            font-size: 0.7rem; color: var(--accent-blue);
-            text-transform: uppercase; letter-spacing: 3px; font-weight: 700;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
         }
 
-        /* Navigation Menu */
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 700;
+        }
+
+        /* NAVIGATION */
         .nav-wrapper {
-            display: flex; gap: 10px;
-            background: rgba(255,255,255,0.03);
-            padding: 5px; border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .nav-item {
             position: relative;
-            background: transparent; border: none;
+            background: transparent;
+            border: none;
             color: #b2bec3;
-            padding: 10px 25px;
-            font-family: var(--font-display); font-weight: 600; font-size: 0.85rem;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            padding: 12px 28px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 15px;
+            transition: all 0.3s var(--ease-bounce);
             overflow: hidden;
+            cursor: pointer;
         }
 
-        .nav-item:hover { color: #fff; }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .nav-item:hover::before {
+            left: 0;
+        }
 
         .nav-item.active {
-            background: #fff; color: #2d3436;
-            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
-            font-weight: 800;
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
         }
 
-        /* Music Controls Mini */
+        /* MUSIC CONTROL */
         .music-control-mini {
-            display: flex; align-items: center; gap: 10px;
-        }
-        .visualizer-canvas {
-            width: 50px; height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        /* ==========================================================================
-           4. MAIN CONTENT & SECTIONS
-           ========================================================================== */
+        .visualizer-canvas {
+            width: 60px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        #mute-btn {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            cursor: pointer;
+            transition: all 0.3s;
+            filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.6));
+        }
+
+        #mute-btn:hover {
+            color: var(--accent-pink);
+            transform: scale(1.2);
+        }
+
+        /* ============================================================
+           MAIN CONTAINER - KHUNG CHÍNH
+        ============================================================ */
         .container {
-            width: 92%; max-width: 1400px;
+            width: 95%;
+            max-width: 1600px;
             margin: 0 auto;
-            padding-top: 50px; padding-bottom: 120px;
+            padding-top: 60px;
+            padding-bottom: 150px;
         }
 
         .section {
-            display: none; opacity: 0;
-            transform: translateY(40px);
+            display: none;
+            opacity: 0;
+            transform: translateY(50px);
             transition: opacity 0.6s ease, transform 0.6s var(--ease-bounce);
         }
-        .section.active { display: block; opacity: 1; transform: translateY(0); }
 
-        /* HERO TEXT */
+        .section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* HERO HEADER */
         .hero-head {
-            text-align: center; margin-bottom: 60px;
+            text-align: center;
+            margin-bottom: 80px;
             position: relative;
         }
+
         .hero-head h2 {
             font-family: var(--font-display);
-            font-size: 4rem; font-weight: 900;
-            background: linear-gradient(to bottom, #fff 0%, #a29bfe 100%);
-            -webkit-background-clip: text; color: transparent;
-            margin-bottom: 10px;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            letter-spacing: -2px;
-        }
-        .hero-head p {
-            font-size: 1.1rem; color: #dfe6e9;
-            letter-spacing: 5px; text-transform: uppercase;
-            opacity: 0.8;
-        }
-        .hero-head::after {
-            content: ''; position: absolute; bottom: -20px; left: 50%;
-            transform: translateX(-50%);
-            width: 100px; height: 3px;
-            background: var(--accent-gradient);
-            border-radius: 3px;
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -3px;
+            text-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            animation: titleFloat 3s ease-in-out infinite;
         }
 
-        /* ==========================================================================
-           5. LANDSCAPE CARD SYSTEM (V2 - COMPLEX)
-           ========================================================================== */
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-head p {
+            font-size: 1.2rem;
+            color: var(--text-sub);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .hero-head::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+        }
+
+        /* ============================================================
+           HOME - LANDSCAPE CARDS (ADMIN TEAM)
+        ============================================================ */
         .grid-admins {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 40px;
-            perspective: 1000px;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 50px;
+            perspective: 1500px;
         }
 
         .landscape-card {
             background: var(--card-bg);
-            border-radius: 30px;
-            height: 500px;
+            border-radius: 35px;
+            height: 550px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
             transition: all 0.5s var(--ease-bounce);
             transform-style: preserve-3d;
+            border: 2px solid rgba(102, 126, 234, 0.2);
         }
 
         .landscape-card:hover {
-            transform: translateY(-15px) rotateX(2deg);
-            box-shadow: 0 30px 80px rgba(108, 92, 231, 0.4);
+            transform: translateY(-20px) rotateX(5deg);
+            box-shadow: 0 35px 90px rgba(102, 126, 234, 0.5);
+            border-color: rgba(102, 126, 234, 0.6);
         }
 
-        /* PHẦN TRÊN: BẦU TRỜI & NÚI */
         .card-scenery {
-            height: 55%; width: 100%;
-            position: absolute; top: 0; left: 0;
-            background: var(--sky-gradient, linear-gradient(135deg, #1e3c72, #2a5298));
+            height: 55%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             overflow: hidden;
         }
 
-        /* Trang trí trong card (Mây, Sao) */
         .star {
-            position: absolute; width: 2px; height: 2px; background: #fff;
-            border-radius: 50%; box-shadow: 0 0 5px #fff;
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #fff;
             animation: twinkle 2s infinite alternate;
         }
-        .mountain {
-            position: absolute; bottom: 0; width: 100%; height: 60%;
-            background: rgba(255,255,255,0.1);
-            clip-path: polygon(0% 100%, 25% 40%, 50% 90%, 75% 30%, 100% 100%);
+
+        @keyframes twinkle {
+            from { opacity: 0.4; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1.2); }
         }
 
-        /* Avatar nổi */
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70%;
+            background: rgba(255, 255, 255, 0.15);
+            clip-path: polygon(0% 100%, 20% 40%, 40% 80%, 60% 30%, 80% 60%, 100% 100%);
+        }
+
         .card-avatar-container {
-            position: absolute; top: 55%; left: 50%;
+            position: absolute;
+            top: 55%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 120px; height: 120px;
+            width: 140px;
+            height: 140px;
             z-index: 10;
         }
+
         .card-avatar {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid #fff;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: 0.5s;
+            border: 6px solid #fff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            transition: 0.5s var(--ease-bounce);
         }
-        .landscape-card:hover .card-avatar { transform: scale(1.1) rotate(5deg); border-color: var(--accent-purple); }
 
-        /* PHẦN DƯỚI: NỘI DUNG */
+        .landscape-card:hover .card-avatar {
+            transform: scale(1.15) rotate(5deg);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+        }
+
         .card-details {
-            position: absolute; bottom: 0; width: 100%; height: 45%;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 45%;
             background: #fff;
-            padding: 60px 20px 20px;
+            padding: 60px 25px 25px;
             text-align: center;
         }
-        
-        /* Hiệu ứng sóng (Wave) ngăn cách */
+
         .wave-divider {
-            position: absolute; top: -50px; left: 0;
-            width: 100%; height: 50px;
+            position: absolute;
+            top: -60px;
+            left: 0;
+            width: 100%;
+            height: 60px;
             background: #fff;
-            clip-path: path("M0,50 L0,20 C150,50 350,0 500,20 L500,50 Z");
-            /* Backup clip-path đơn giản hơn nếu lỗi */
-            /* clip-path: polygon(0 50%, 100% 0, 100% 100%, 0% 100%); */
+            clip-path: polygon(0 40%, 100% 10%, 100% 100%, 0% 100%);
         }
 
         .admin-name {
             font-family: var(--font-display);
-            font-size: 1.5rem; font-weight: 800;
-            color: var(--text-main); margin-bottom: 5px;
-        }
-        .admin-role {
-            font-size: 0.8rem; font-weight: 700;
-            color: var(--accent-blue); text-transform: uppercase;
-            letter-spacing: 2px; margin-bottom: 10px;
-        }
-        .admin-quote {
-            font-size: 0.9rem; color: var(--text-sub);
-            font-style: italic; margin-bottom: 15px;
-            padding: 0 10px;
-        }
-        
-        .social-bar {
-            display: flex; justify-content: center; gap: 15px;
-        }
-        .social-btn {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: #f1f2f6;
-            color: var(--text-main);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; text-decoration: none;
-            transition: 0.3s;
-        }
-        .social-btn:hover {
-            background: var(--accent-gradient); color: #fff;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: #2d3436;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
         }
 
-        /* ==========================================================================
-           6. CLIENTS SECTION (MODERN GRID) - ĐÃ CHỈNH SỬA
-           ========================================================================== */
+        .admin-role {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        .admin-quote {
+            font-size: 0.95rem;
+            color: #636e72;
+            font-style: italic;
+            margin-bottom: 20px;
+            padding: 0 15px;
+            line-height: 1.6;
+        }
+
+        .social-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.4s var(--ease-bounce);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .social-btn:hover::before {
+            opacity: 1;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-10px) scale(1.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Màu sắc riêng cho từng nền tảng */
+        .social-btn:nth-child(1) {
+            background: linear-gradient(135deg, #1877f2, #0c5cbd);
+            color: white;
+        }
+
+        .social-btn:nth-child(2) {
+            background: linear-gradient(135deg, #5865f2, #404eed);
+            color: white;
+        }
+
+        .social-btn:nth-child(3) {
+            background: linear-gradient(135deg, #000000, #ee1d52, #69c9d0);
+            color: white;
+        }
+
+        /* ============================================================
+           CLIENTS SECTION - EXECUTORS
+        ============================================================ */
         .client-container {
             display: grid;
-            /* Chia thành 3 cột đều nhau */
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 25px; /* Khoảng cách giữa các ô */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
         }
 
         .client-box {
-            background: rgba(30, 30, 45, 0.6);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 45px; /* Bo góc nhỏ hơn */
-            padding: 40px; /* Giảm padding để khung nhỏ lại */
-            transition: all 0.3s ease;
+            background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(50, 50, 80, 0.7));
+            backdrop-filter: blur(25px);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 30px;
+            padding: 35px;
+            transition: all 0.4s var(--ease-bounce);
             position: relative;
             overflow: hidden;
-            display: flex; 
+            display: flex;
             flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
-        
+
         .client-box::before {
-            content: ''; position: absolute; top: 0; left: 0;
-            width: 100%; height: 5px; background: var(--accent-gradient);
-            opacity: 0; transition: 0.3s;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.4), transparent);
+            transition: left 0.7s;
         }
+
+        .client-box:hover::before {
+            left: 100%;
+        }
+
         .client-box:hover {
-            transform: translateY(-5px);
-            background: rgba(40, 40, 60, 0.8);
+            transform: translateY(-15px) scale(1.03);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 30px 70px rgba(102, 126, 234, 0.4);
         }
-        .client-box:hover::before { opacity: 1; }
 
         .client-thumb {
-            width: 100%; 
-            height: 130px; /* Giảm chiều cao ảnh từ 160px xuống 130px */
-            border-radius: 15px; overflow: hidden;
-            margin-bottom: 15px; position: relative;
+            width: 100%;
+            height: 180px;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            position: relative;
+            border: 3px solid rgba(102, 126, 234, 0.4);
         }
+
         .client-thumb img {
-            width: 100%; height: 100%; object-fit: cover;
-            transition: 0.5s;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease-bounce);
         }
-        .client-box:hover .client-thumb img { transform: scale(1.1); }
-        
+
+        .client-box:hover .client-thumb img {
+            transform: scale(1.2) rotate(3deg);
+        }
+
         .version-badge {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(0,0,0,0.7); color: #fff;
-            padding: 3px 8px; border-radius: 6px; /* Chỉnh lại padding/radius */
-            font-size: 0.65rem; font-weight: bold;
-            backdrop-filter: blur(5px);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
         }
 
         .client-info h3 {
-            font-family: var(--font-display); font-size: 1rem; /* Giảm cỡ chữ tiêu đề */
-            color: #fff; margin-bottom: 5px;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         }
+
         .client-info p {
-            font-size: 0.8rem; color: #b2bec3; margin-bottom: 15px; /* Giảm margin và cỡ chữ */
-            line-height: 1.4;
+            font-size: 0.9rem;
+            color: #b2bec3;
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
 
         .action-btn {
-            display: block; width: 100%;
-            padding: 10px; /* Nút gọn hơn */
+            display: block;
+            width: 100%;
+            padding: 16px;
             background: var(--accent-gradient);
-            color: #fff; text-align: center;
-            border-radius: 10px; font-weight: 700;
-            text-decoration: none; font-size: 0.85rem;
-            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
-            transition: 0.3s;
-            margin-top: auto; /* Đẩy nút xuống dưới cùng */
-        }
-        .action-btn:hover {
-            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
-            transform: translateY(-2px);
+            color: #fff;
+            text-align: center;
+            border-radius: 18px;
+            font-weight: 900;
+            text-decoration: none;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s var(--ease-bounce);
+            margin-top: auto;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* ==========================================================================
-           7. SCRIPT HUB & SEARCH BAR (ADVANCED)
-           ========================================================================== */
-        /* Search Bar */
+        .action-btn:hover {
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7);
+            transform: translateY(-5px);
+            background: var(--accent-gradient-2);
+        }
+
+        /* ============================================================
+           ACCOUNTS SECTION - BÁN TÀI KHOẢN
+        ============================================================ */
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .account-card {
+            background: linear-gradient(145deg, rgba(30, 30, 50, 0.95), rgba(50, 50, 80, 0.9));
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.5s var(--ease-bounce);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe, #667eea);
+            background-size: 400% 400%;
+            border-radius: 30px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .account-card:hover::before {
+            opacity: 1;
+        }
+
+        .account-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.6);
+        }
+
+        .acc-header {
+            position: relative;
+            height: 300px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .acc-header::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 2px, transparent 2px);
+            background-size: 25px 25px;
+            animation: movePattern 25s linear infinite;
+        }
+
+        @keyframes movePattern {
+            from { transform: translate(0, 0); }
+            to { transform: translate(50px, 50px); }
+        }
+
+        .acc-level-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1rem;
+            color: #ffd700;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+            border: 3px solid rgba(255, 215, 0, 0.6);
+            z-index: 10;
+        }
+
+        .acc-price-tag {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 0, 60, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #fff;
+            box-shadow: 0 5px 25px rgba(255, 0, 60, 0.6);
+            animation: pulseSale 2.5s ease infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulseSale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); box-shadow: 0 8px 30px rgba(255, 0, 60, 0.8); }
+        }
+
+        .acc-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.9;
+            transition: all 0.5s ease;
+        }
+
+        .account-card:hover .acc-image {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        /* Optional: Keep icon support for cards without images */
+        .acc-icon {
+            font-size: 6rem;
+            color: rgba(255, 255, 255, 0.95);
+            z-index: 1;
+            text-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .acc-body {
+            padding: 30px;
+            background: rgba(20, 20, 35, 0.95);
+        }
+
+        .acc-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .acc-features {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: #dfe6e9;
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            padding-left: 10px;
+            color: #fff;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item i {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+        }
+
+        .acc-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-acc {
+            padding: 15px;
+            border-radius: 15px;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s var(--ease-bounce);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-buy {
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-buy:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+            background: var(--accent-gradient-2);
+        }
+
+        .btn-details {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-details:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-5px);
+        }
+
+        /* ============================================================
+           SCRIPTS SECTION
+        ============================================================ */
         .search-wrapper {
-            max-width: 600px; margin: 0 auto 50px auto;
+            max-width: 700px;
+            margin: 0 auto 60px auto;
             position: relative;
         }
+
         .search-input {
-            width: 100%; padding: 15px 50px 15px 25px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50px;
-            color: #fff; font-family: var(--font-body); font-size: 1rem;
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            background: rgba(255,255,255,0.2);
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.3);
-        }
-        .search-icon {
-            position: absolute; right: 25px; top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* Script Terminals */
-        .script-list {
-            display: grid; gap: 20px;
-        }
-
-        .terminal-box {
-            background: #1e1e2e;
-            border: 1px solid #333;
-            border-radius: 12px; overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: 0.3s;
-        }
-        .terminal-box:hover { border-color: #555; }
-
-        .terminal-bar {
-            background: #282a36; padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid #444;
-        }
-        .t-dots { display: flex; gap: 6px; }
-        .t-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        
-        .t-title { color: #f8f8f2; font-family: monospace; font-weight: bold; }
-
-        .code-content {
-            padding: 0; position: relative;
-        }
-        .code-area {
-            width: 100%; height: 90px;
-            background: #15151e; color: #50fa7b;
-            padding: 20px; border: none;
-            font-family: 'Consolas', monospace; font-size: 0.9rem;
-            resize: none;
-        }
-        .copy-overlay {
             width: 100%;
-            background: #282a36;
-            display: flex; justify-content: flex-end;
-            padding: 5px 10px;
+            padding: 18px 60px 18px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 60px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            transition: all 0.3s;
         }
-        .btn-copy {
-            background: transparent; border: none;
-            color: #bdc3c7; cursor: pointer;
-            font-weight: bold; font-size: 0.8rem;
-            display: flex; align-items: center; gap: 5px;
-            padding: 8px 15px; border-radius: 5px;
-            transition: 0.2s;
-        }
-        .btn-copy:hover { background: #444; color: #fff; }
-        .btn-copy i { color: var(--accent-purple); }
 
-        /* ==========================================================================
-           8. DISCORD COMMUNITY (REAL IMAGES)
-           ========================================================================== */
-        .discord-wall {
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-blue);
+            font-size: 1.3rem;
+        }
+
+        .script-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 30px;
         }
 
-        .discord-plate {
-            background: #2b2d31; /* Discord Dark */
-            border-radius: 16px;
-            padding: 25px;
-            display: flex; flex-direction: column; align-items: center;
-            position: relative;
-            border: 1px solid transparent;
-            transition: 0.3s;
+        .terminal-box {
+            background: #1a1a2e;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+            display: grid;
+            gap: 30px;
+        }
+
+        .terminal-box {
+            background: #1a1a2e;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s;
+    }
+
+    .terminal-box:hover {
+        border-color: rgba(102, 126, 234, 0.6);
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+    }
+
+    .terminal-bar {
+        background: #282a36;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .t-dots {
+        display: flex;
+        gap: 8px;
+    }
+
+    .t-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        box-shadow: 0 0 10px currentColor;
+    }
+
+    .red { background: #ff5f56; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #27c93f; }
+
+    .t-title {
+        color: #f8f8f2;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1rem;
+    }
+
+    .code-content {
+        padding: 0;
+        position: relative;
+    }
+
+    .code-area {
+        width: 100%;
+        height: 100px;
+        background: #15151e;
+        color: #50fa7b;
+        padding: 25px;
+        border: none;
+        font-family: 'Consolas', monospace;
+        font-size: 0.95rem;
+        resize: none;
+        line-height: 1.6;
+    }
+
+    .copy-overlay {
+        width: 100%;
+        background: #282a36;
+        display: flex;
+        justify-content: flex-end;
+        padding: 8px 15px;
+    }
+
+    .btn-copy {
+        background: transparent;
+        border: none;
+        color: #bdc3c7;
+        cursor: pointer;
+        font-weight: 800;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .btn-copy:hover {
+        background: rgba(102, 126, 234, 0.3);
+        color: #fff;
+    }
+
+    .btn-copy i {
+        color: var(--accent-blue);
+    }
+
+    /* ============================================================
+       DISCORD SECTION
+    ============================================================ */
+    .discord-wall {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+    }
+
+    .discord-plate {
+        background: linear-gradient(145deg, #2b2d31, #1e1f22);
+        border-radius: 25px;
+        padding: 35px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        border: 2px solid rgba(88, 101, 242, 0.3);
+        transition: all 0.4s var(--ease-bounce);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .discord-plate:hover {
+        background: linear-gradient(145deg, #313338, #2b2d31);
+        border-color: #5865F2;
+        transform: translateY(-15px) scale(1.03);
+        box-shadow: 0 25px 60px rgba(88, 101, 242, 0.4);
+    }
+
+    .dc-icon-frame {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .dc-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 35px;
+        object-fit: cover;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        border: 4px solid rgba(88, 101, 242, 0.3);
+    }
+
+    .dc-status {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 28px;
+        height: 28px;
+        background: #23a559;
+        border: 5px solid #2b2d31;
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(35, 165, 89, 0.6);
+    }
+
+    .dc-name {
+        color: #fff;
+        font-family: var(--font-display);
+        font-weight: 900;
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .dc-info {
+        color: #b5bac1;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .btn-join {
+        width: 100%;
+        padding: 14px;
+        background: #5865F2;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 800;
+        text-align: center;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 25px rgba(88, 101, 242, 0.4);
+    }
+
+    .btn-join:hover {
+        background: #4752c4;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(88, 101, 242, 0.6);
+    }
+
+    /* ============================================================
+       ACCOUNT DETAIL MODAL - POPUP CHI TIẾT
+    ============================================================ */
+    .acc-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+        overflow-y: auto;
+        animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .acc-modal-content {
+        position: relative;
+        background: linear-gradient(145deg, rgba(20, 20, 35, 0.95), rgba(30, 30, 50, 0.95));
+        backdrop-filter: blur(40px);
+        border: 3px solid var(--glass-border);
+        margin: 5% auto;
+        padding: 50px;
+        width: 90%;
+        max-width: 1400px;
+        border-radius: 30px;
+        animation: slideDown 0.5s var(--ease-bounce);
+        box-shadow: 0 30px 80px rgba(102, 126, 234, 0.5);
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .acc-modal-close {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        font-size: 2.5rem;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .acc-modal-close:hover {
+        background: var(--accent-gradient-2);
+        transform: rotate(90deg);
+    }
+
+    .acc-modal-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .acc-modal-header h2 {
+        font-family: var(--font-display);
+        font-size: 2.8rem;
+        font-weight: 900;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+    }
+
+    /* 4 KHUNG 1 HÀNG */
+    .acc-details-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .acc-detail-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 30px;
+        text-align: center;
+        transition: all 0.4s var(--ease-bounce);
+    }
+
+    .acc-detail-box:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent-blue);
+        background: rgba(102, 126, 234, 0.1);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .acc-detail-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .acc-detail-label {
+        color: var(--text-sub);
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
+
+    .acc-detail-value {
+        font-family: var(--font-display);
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #fff;
+    }
+
+    .acc-modal-description {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .acc-modal-description h3 {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: var(--accent-blue);
+    }
+
+    .acc-modal-description p {
+        color: var(--text-light);
+        line-height: 1.8;
+        font-size: 1.05rem;
+    }
+
+    .acc-modal-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .btn-modal-primary,
+    .btn-modal-secondary {
+        padding: 18px 50px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 15px;
+        border: none;
+        font-family: var(--font-display);
+        cursor: pointer;
+        transition: all 0.3s var(--ease-bounce);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .btn-modal-primary {
+        background: var(--accent-gradient);
+        color: #fff;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-modal-primary:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-modal-secondary {
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-modal-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--accent-blue);
+        transform: translateY(-5px);
+    }
+
+    /* RESPONSIVE CHO MODAL */
+    @media (max-width: 1200px) {
+        .acc-details-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .acc-details-grid {
+            grid-template-columns: 1fr;
         }
         
-        .discord-plate:hover {
-            background: #313338;
-            border-color: #5865F2;
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(88, 101, 242, 0.2);
-        }
-
-        .dc-icon-frame {
-            width: 100px; height: 100px;
-            margin-bottom: 20px; position: relative;
+        .acc-modal-content {
+            width: 95%;
+            padding: 30px 20px;
         }
         
-        .dc-img {
-            width: 100%; height: 100%;
-            border-radius: 30px; /* Squircle shape */
-            object-fit: cover;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        .acc-modal-actions {
+            flex-direction: column;
+        }
+    }
+
+    /* ============================================================
+       TOAST NOTIFICATION
+    ============================================================ */
+    #toast-container {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        z-index: 2000;
+    }
+
+    .toast {
+        background: rgba(15, 15, 30, 0.95);
+        color: #fff;
+        padding: 18px 30px;
+        border-left: 5px solid var(--accent-blue);
+        border-radius: 12px;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        animation: slideIn 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(150%); }
+        to { transform: translateX(0); }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE DESIGN
+    ============================================================ */
+    @media (max-width: 1200px) {
+        .client-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        header {
+            padding: 0 30px;
+            height: 80px;
         }
 
-        .dc-status {
-            position: absolute; bottom: -2px; right: -2px;
-            width: 24px; height: 24px;
-            background: #23a559;
-            border: 5px solid #2b2d31;
-            border-radius: 50%;
+        .hero-head h2 {
+            font-size: 3.5rem;
         }
 
-        .dc-name {
-            color: #fff; font-family: var(--font-display);
-            font-weight: 800; font-size: 1.2rem;
-            margin-bottom: 8px; text-align: center;
-        }
-        .dc-info {
-            color: #b5bac1; font-size: 0.85rem;
-            text-align: center; margin-bottom: 25px;
-            line-height: 1.4;
+        .landscape-card {
+            height: 450px;
         }
 
-        .btn-join {
-            width: 100%; padding: 10px;
-            background: #5865F2; color: #fff;
-            text-decoration: none; border-radius: 5px;
-            font-weight: 600; text-align: center;
-            transition: 0.2s;
+        .nav-item {
+            padding: 10px 20px;
+            font-size: 0.8rem;
         }
-        .btn-join:hover { background: #4752c4; }
+    }
 
-        /* ==========================================================================
-           9. NOTIFICATION & EXTRAS
-           ========================================================================== */
-        /* Toast Notification */
-        #toast-container {
-            position: fixed; bottom: 30px; right: 30px; z-index: 2000;
-        }
-        .toast {
-            background: rgba(15, 15, 25, 0.9);
-            color: #fff;
-            padding: 15px 25px;
-            border-left: 5px solid var(--accent-purple);
-            border-radius: 8px;
-            margin-top: 10px;
-            display: flex; align-items: center; gap: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s forwards, fadeOut 0.5s 2.5s forwards;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-
-        /* Animation Keyframes */
-        @keyframes pulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 2px var(--accent-purple)); }
-            50% { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--accent-blue)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 2px var(--accent-purple)); }
-        }
-        @keyframes twinkle { from { opacity: 0.5; } to { opacity: 1; transform: scale(1.2); } }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            header { padding: 0 20px; height: 70px; }
-            .hero-head h2 { font-size: 2.8rem; }
-            .landscape-card { height: 380px; }
-            .nav-item { padding: 8px 15px; font-size: 0.75rem; }
-            /* Thêm responsive cho client container */
-            .client-container {
-                grid-template-columns: repeat(2, 1fr); /* Máy tính bảng hiển thị 2 cột */
-            }
-        }
-        @media (max-width: 768px) {
-            .nav-wrapper { display: none; /* Add hamburger menu logic if needed */ }
-            /* Simplified mobile nav for demo */
-            .nav-wrapper {
-                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-                background: rgba(0,0,0,0.8); z-index: 2000;
-                display: flex; width: 90%; justify-content: space-around;
-            }
-            .hero-head h2 { font-size: 2.2rem; }
-            /* Thêm responsive cho client container trên điện thoại nhỏ */
-            .client-container {
-                grid-template-columns: 1fr; /* Điện thoại hiển thị 1 cột */
-            }
+    @media (max-width: 768px) {
+        .client-container {
+            grid-template-columns: 1fr;
         }
 
-    </style>
+        .accounts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-head h2 {
+            font-size: 2.5rem;
+        }
+
+        .nav-wrapper {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            width: 95%;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            font-size: 0.75rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.3rem;
+        }
+    }
+
+</style>
 </head>
 <body>
-
-    <audio id="bg-music" ></audio>
+    <audio id="bg-music"></audio>
     <canvas id="particle-canvas"></canvas>
     <div class="fixed-bg"></div>
     <div class="grid-overlay"></div>
-    
     <div id="toast-container"></div>
-
-    <header>
-        <div class="brand-container">
-            <i class="fas fa-mountain logo-icon"></i>
-            <div class="brand-text">
-                <h1>NAK HUB</h1>
-                <span>LONELY</span>
-            </div>
+<!-- HEADER -->
+<header>
+    <div class="brand-container">
+        <i class="fas fa-mountain logo-icon"></i>
+        <div class="brand-text">
+            <h1>NAK HUB</h1>
+            <span>LONELY</span>
         </div>
-
-        <nav class="nav-wrapper">
-            <button class="nav-item active" onclick="switchTab('home', this)">
-                <i class="fas fa-home"></i> TRANG CHỦ
-            </button>
-            <button class="nav-item" onclick="switchTab('clients', this)">
-                <i class="fas fa-mobile-alt"></i> CLIENTS
-            </button>
-            <button class="nav-item" onclick="switchTab('scripts', this)">
-                <i class="fas fa-code"></i> SCRIPTS
-            </button>
-            <button class="nav-item" onclick="switchTab('discord', this)">
-                <i class="fab fa-discord"></i> DISCORD 
-            </button>
-        </nav>
-
-        <div class="music-control-mini">
-            <canvas id="audio-viz" class="visualizer-canvas"></canvas>
-            <i class="fas fa-volume-up" style="color: #a29bfe; cursor: pointer;" id="mute-btn"></i>
-        </div>
-    </header>
-
-    <div class="container">
-
-        <section id="home" class="section active">
-            <div class="hero-head">
-                <h2>TRANG CHỦ</h2>
-                <p>VI VUA KHONG BAO BAT TAI</p>
-            </div>
-
-            <div class="grid-admins">
-                
-                <div class="landscape-card">
-                    <div class="card-scenery">
-                        <div class="star" style="top:20%; left:30%"></div>
-                        <div class="star" style="top:50%; left:80%"></div>
-                        <div class="star" style="top:10%; left:10%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/image.webp" class="card-avatar" alt="Avatar">
-                    </div>
-
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 40%, 100% 10%, 100% 100%, 0% 100%);"></div>
-                        
-                        <div class="admin-name">HẢI YẾN</div>
-                        <div class="admin-role">CÀY THUÊ / TRADER</div>
-                        <div class="admin-quote">"Uy tín tạo nên thương hiệu. Giá rẻ cho học sinh."</div>
-                        
-                        <div class="social-bar">
-                            <a href="https://facebook.com/Sunnixkissyou" target="_blank" class="social-btn"><i class="fab fa-facebook-f"></i></a>
-                            <a href="https://discord.gg/aZ4AD9vfxg" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                            <a href="https://www.tiktok.com/@daily.giveways.3" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="landscape-card">
-                    <div class="card-scenery" style="background: linear-gradient(135deg, #4b6cb7, #182848);">
-                        <div class="star" style="top:15%; left:60%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/FB_IMG_1763383517877.webp" class="card-avatar" alt="Avatar">
-                    </div>
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 20%, 100% 40%, 100% 100%, 0% 100%);"></div>
-                        <div class="admin-name">NAK NO HACK</div>
-                        <div class="admin-role">OWNER / DEVELOPER</div>
-                        <div class="admin-quote">"Gái đẹp nhất server. Điều hành mọi hoạt động."</div>
-                        <div class="social-bar">
-                            <a href="https://www.tiktok.com/@nak_nohack" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="landscape-card">
-                    <div class="card-scenery" style="background: linear-gradient(135deg, #8E2DE2, #4A00E0);">
-                        <div class="star" style="top:40%; left:20%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/NHOI.webp" class="card-avatar" alt="Avatar">
-                    </div>
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 30%, 100% 10%, 100% 100%, 0% 100%);"></div>
-                        <div class="admin-name">NHOI</div>
-                        <div class="admin-role">DESIGNER / BANNER</div>
-                        <div class="admin-quote">"Nghệ thuật là ánh trăng lừa dối. Đẹp trai nhất Sivi."</div>
-                        <div class="social-bar">
-                             <a href="https://www.tiktok.com/@nhoiii_dev" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="landscape-card">
-                    <div class="card-scenery" style="background: linear-gradient(135deg, #f12711, #f5af19);">
-                        <div class="star" style="top:10%; left:80%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/IMG_0873.webp" class="card-avatar" alt="Avatar">
-                    </div>
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 15%, 100% 35%, 100% 100%, 0% 100%);"></div>
-                        <div class="admin-name">SUN MEDIA</div>
-                        <div class="admin-role">SUPPORT / SELLER</div>
-                        <div class="admin-quote">"Đẹp trai miền Tây. Hỗ trợ nhiệt tình 24/7."</div>
-                        <div class="social-bar">
-                            <a href="https://facebook.com/share/1BeKF5sQ88" target="_blank" class="social-btn"><i class="fab fa-facebook"></i></a>
-                            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <div class="landscape-card">
-                    <div class="card-scenery" style="background: linear-gradient(135deg, #0f0249, #4915af);">
-                        <div class="star" style="top:40%; left:20%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/th1p.webp" class="card-avatar" alt="Avatar">
-                    </div>
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 30%, 100% 10%, 100% 100%, 0% 100%);"></div>
-                        <div class="admin-name">bch.said</div>
-                        <div class="admin-role">SCRIPT / CLIENT </div>
-                        <div class="admin-quote">"Nghệ thuật là ánh trăng lừa dối"</div>
-                        <div class="social-bar">
-                             <a href="https://www.tiktok.com/@bch.said" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-        
-                <div class="landscape-card">
-                    <div class="card-scenery" style="background: linear-gradient(135deg, #51e22d, #ebf1f0);">
-                        <div class="star" style="top:40%; left:20%"></div>
-                        <div class="mountain"></div>
-                    </div>
-                    <div class="card-avatar-container">
-                        <img src="ẢNH/nhuaobuddy.webp" class="card-avatar" alt="Avatar">
-                    </div>
-                    <div class="card-details">
-                        <div class="wave-divider" style="clip-path: polygon(0 30%, 100% 10%, 100% 100%, 0% 100%);"></div>
-                        <div class="admin-name">NHU AO BUDYY</div>
-                        <div class="admin-role">IDOL TIKTOK </div>
-                        <div class="admin-quote">"CHỦ QUÁN NÉT "</div>
-                        <div class="social-bar">
-                             <a href="https://www.tiktok.com/@nhuaobddy" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
-                            <a href="https://discord.gg/E2jTEvfF8h" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
-                        </div>
-                    </div>
-
-                </div>
-        </section>
-<section id="clients" class="section">
-    <div class="hero-head">
-        <h2>EXECUTORS</h2>
-        <p>NAK NO HACK</p>
     </div>
-    <div class="client-container">
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>DELTA×VNG+Font thường+Fix cập nhật</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/tndjdctjw33t0tr/Delta_VN%F0%9F%87%BB%F0%9F%87%B3_V2.702_Fixed.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
 
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>DELTA×VNG+Fixlag+Font Thường</h3>
-                <p>Font thường</p>
-                <a href="https://www.mediafire.com/file/l35amt6p7djwfei/Detla%25C3%2597VNG%252BFixlag%252BFont_Th%25C6%25B0%25E1%25BB%259Dng%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
+    <nav class="nav-wrapper">
+        <button class="nav-item active" onclick="switchTab('home', this)">
+            <i class="fas fa-home"></i> TRANG CHỦ
+        </button>
+        <button class="nav-item" onclick="switchTab('clients', this)">
+            <i class="fas fa-mobile-alt"></i> CLIENTS
+        </button>
+        <button class="nav-item" onclick="switchTab('accounts', this)">
+            <i class="fas fa-user-circle"></i> BÁN ACC
+        </button>
+        <button class="nav-item" onclick="switchTab('scripts', this)">
+            <i class="fas fa-code"></i> SCRIPTS
+        </button>
+        <button class="nav-item" onclick="switchTab('discord', this)">
+            <i class="fab fa-discord"></i> DISCORD
+        </button>
+    </nav>
 
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>DELTA×VNG+Fixlag+Font Minecraft</h3>
-                <p>Font Minecraft.</p>
-                <a href="https://www.mediafire.com/file/7qt19kg6mk2uv8r/Detla%25C3%2597VNG%252BFixlag%252BFont_Minecraft%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>DELTA×VNG+Fixlag+Font Vệt Sơn</h3>
-                <p>Font Việt Sơn.</p>
-                <a href="https://www.mediafire.com/file/xjqp760d3mfls0h/Detla%C3%97VNG%2BFixlag%2BFont_V%E1%BB%87t_S%C6%A1n%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/cry.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>Cryptic×VNG+Fixlag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/r7dd61v2vmyxt2g/Cryptic%25C3%2597VNG%252BFixlag.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbJovsjU6ODxwd0ANRT6AWQ9A8JCEYC6Y5XQ&s" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>Ronix×VNG+Fixlag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/ysy6hhap3vdesxo/Ronix%25C3%2597VNG_v2.702%252BFixlag%25F0%259F%2587%25BB%25F0%259F%2587%25B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/JJSploit-1.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>JJSploit×VNG+FixLag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/dtwm6hcykbyakbg/JJSploit_VN%F0%9F%87%BB%F0%9F%87%B3_V2.702_32Bits.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/cry.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>Cryptic×VNG+Fixlag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/4zqinr9lgb3nfc8/Cryptic_VNG_2.702.613_%2832-bit%29.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/px.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>Punk×VNG+Fixlag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/2qi3z12ypm1yqqk/PunkX_VNG_64Bits_2.702.622.apk/file?hash=re5UiOnuzeD9cDsSkdRFdEAyHAvVPF3Q0o00zn9NHTfprc3blLgY8OCBiq0A1tMM" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-        
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/Neutron-Executor-Favicon.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>>Neutron×VNG+Fixlag</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/jrlemyenm0o65i9/Neutron_VNG_32Bit_702.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-      
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/acr.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>>Arceus×Neo VNG</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/ye88wcsclp9iqws/Arceus_x_Neo_VNG_V2.702.632.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div>
-        
-        <div class="client-box">
-            <div class="version-badge">v2.702</div>
-            <div class="client-thumb">
-                <img src="ẢNH/skidix.webp" alt="Delta">
-            </div>
-            <div class="client-info">
-                <h3>>Skibx×VNG</h3>
-                <p>Font thường.</p>
-                <a href="https://www.mediafire.com/file/tfuwuuqfqh1qumz/Skibx_VNG_V2.702.632.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
-            </div>
-        </div> 
-
+    <div class="music-control-mini">
+        <canvas id="audio-viz" class="visualizer-canvas"></canvas>
+        <i class="fas fa-volume-up" id="mute-btn"></i>
     </div>
-</section>
+</header>
 
-        <section id="scripts" class="section">
-            <div class="hero-head">
-                <h2>SCRIPT HUB</h2>
-                <p>Auto Farm </p>
-            </div>
+<!-- MAIN CONTAINER -->
+<div class="container">
+    <!-- HOME SECTION -->
+    <section id="home" class="section active">
+        <div class="hero-head">
+            <h2>ADMIN TEAM</h2>
+            <p>VI VUA KHONG BAO BAT TAI</p>
+        </div>
 
-            <div class="search-wrapper">
-                <input type="text" id="script-search" class="search-input" placeholder="Tìm kiếm Script (VD: HoHo, Redz...)" onkeyup="filterScripts()">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-
-            <div class="script-list" id="script-container">
-                
-                <div class="terminal-box" data-name="quantum hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Quantum Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+        <div class="grid-admins">
+            <div class="landscape-card">
+                <div class="card-scenery">
+                    <div class="star" style="top:20%; left:30%"></div>
+                    <div class="star" style="top:50%; left:80%"></div>
+                    <div class="star" style="top:10%; left:10%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/image.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">HẢI YẾN</div>
+                    <div class="admin-role">CÀY THUÊ / TRADER</div>
+                    <div class="admin-quote">"Uy tín tạo nên thương hiệu. Giá rẻ cho học sinh."</div>
+                    <div class="social-bar">
+                        <a href="https://facebook.com/Sunnixkissyou" target="_blank" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://discord.gg/aZ4AD9vfxg" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
+                        <a href="https://www.tiktok.com/@sunixz_lonely" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-                
-                <div class="terminal-box" data-name="Redz Hub Campuchia V4">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Redz Hub Campuchia V4</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/vinh129150/hack/refs/heads/main/Bloxfruits.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+            </div>
+
+            <div class="landscape-card">
+                <div class="card-scenery" style="background: linear-gradient(135deg, #4b6cb7, #182848);">
+                    <div class="star" style="top:15%; left:60%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/FB_IMG_1763383517877.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">NAK NO HACK</div>
+                    <div class="admin-role">OWNER / DEVELOPER</div>
+                    <div class="admin-quote">"Gái đẹp nhất server. Điều hành mọi hoạt động."</div>
+                    <div class="social-bar">
+                        <a href="https://www.tiktok.com/@nak_nohack" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
                     </div>
                 </div>
-                
-                <div class="terminal-box" data-name="Hiru Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Hiru Hub</div>
+            </div>
+
+            <div class="landscape-card">
+                <div class="card-scenery" style="background: linear-gradient(135deg, #8E2DE2, #4A00E0);">
+                    <div class="star" style="top:40%; left:20%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/NHOI.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">NHOI</div>
+                    <div class="admin-role">IDK</div>
+                    <div class="admin-quote">"Nghệ thuật là ánh trăng lừa dối."</div>
+                    <div class="social-bar">
+                        <a href="https://www.tiktok.com/@nhoiii_dev" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
                     </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+                </div>
+            </div>
+
+            <div class="landscape-card">
+                <div class="card-scenery" style="background: linear-gradient(135deg, #f12711, #f5af19);">
+                    <div class="star" style="top:10%; left:80%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/IMG_0873.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">SUN MEDIA</div>
+                    <div class="admin-role">SUPPORT / SELLER</div>
+                    <div class="admin-quote">"Đẹp trai miền Tây"</div>
+                    <div class="social-bar">
+                        <a href="https://facebook.com/share/1BeKF5sQ88" target="_blank" class="social-btn"><i class="fab fa-facebook"></i></a>
+                        <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="landscape-card">
+                <div class="card-scenery" style="background: linear-gradient(135deg, #0f0249, #4915af);">
+                    <div class="star" style="top:40%; left:20%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/th1p.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">bch.said</div>
+                    <div class="admin-role">SCRIPT / CLIENT</div>
+                    <div class="admin-quote">"Nghệ thuật là ánh trăng lừa dối"</div>
+                    <div class="social-bar">
+                        <a href="https://www.tiktok.com/@bch.said" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="landscape-card">
+                <div class="card-scenery" style="background: linear-gradient(135deg, #51e22d, #ebf1f0);">
+                    <div class="star" style="top:40%; left:20%"></div>
+                    <div class="mountain"></div>
+                </div>
+                <div class="card-avatar-container">
+                    <img src="ẢNH/nhuaobuddy.webp" class="card-avatar" alt="Avatar">
+                </div>
+                <div class="card-details">
+                    <div class="wave-divider"></div>
+                    <div class="admin-name">NHU AO BUDDY</div>
+                    <div class="admin-role">IDOL TIKTOK</div>
+                    <div class="admin-quote">"CHỦ QUÁN NÉT"</div>
+                    <div class="social-bar">
+                        <a href="https://www.tiktok.com/@nhuaobddy" target="_blank" class="social-btn"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://discord.gg/E2jTEvfF8h" target="_blank" class="social-btn"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLIENTS SECTION -->
+    <section id="clients" class="section">
+        <div class="hero-head">
+            <h2>EXECUTORS</h2>
+            <p>NAK NO HACK</p>
+        </div>
+        <div class="client-container">
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
+                </div>
+                <div class="client-info">
+                    <h3>DELTA×VNG+Font thường+Fix cập nhật</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/tndjdctjw33t0tr/Delta_VN🇻🇳_V2.702_Fixed.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
+                </div>
+                <div class="client-info">
+                    <h3>DELTA×VNG+Fixlag+Font Thường</h3>
+                    <p>Font thường</p>
+                    <a href="https://www.mediafire.com/file/bpmpixppll6modv/Detla%C3%97VNG%2BFixlag%2BFont_Th%C6%B0%E1%BB%9Dng%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
+                </div>
+                <div class="client-info">
+                    <h3>DELTA×VNG+Fixlag+Font Minecraft</h3>
+                    <p>Font Minecraft.</p>
+                    <a href="https://www.mediafire.com/file/e9jwrd2dh5smdmu/Detla%C3%97VNG%2BFixlag%2BFont_Minecraft%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/Delta-Executor-9.webp" alt="Delta">
+                </div>
+                <div class="client-info">
+                    <h3>DELTA×VNG+Fixlag+Font Việt Sơn</h3>
+                    <p>Font Việt Sơn.</p>
+                    <a href="https://www.mediafire.com/file/1q6mkypaozsklt4/Detla%C3%97VNG%2BFixlag%2BFont_V%E1%BB%87t_S%C6%A1n%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/cry.webp" alt="Cryptic">
+                </div>
+                <div class="client-info">
+                    <h3>Cryptic×VNG+Fixlag</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/r7dd61v2vmyxt2g/Cryptic%C3%97VNG%2BFixlag.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbJovsjU6ODxwd0ANRT6AWQ9A8JCEYC6Y5XQ&s" alt="Ronix">
+                </div>
+                <div class="client-info">
+                    <h3>Ronix×VNG+Fixlag</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/ysy6hhap3vdesxo/Ronix%C3%97VNG_v2.702%2BFixlag%F0%9F%87%BB%F0%9F%87%B3.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/JJSploit-1.webp" alt="JJSploit">
+                </div>
+                <div class="client-info">
+                    <h3>JJSploit×VNG+FixLag</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/dtwm6hcykbyakbg/JJSploit_VN🇻🇳_V2.702_32Bits.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/cry.webp" alt="Cryptic">
+                </div>
+                <div class="client-info">
+                    <h3>Cryptic×VNG+Fixlag (32-bit)</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/4zqinr9lgb3nfc8/Cryptic_VNG_2.702.613_%2832-bit%29.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/px.webp" alt="Punk">
+                </div>
+                <div class="client-info">
+                    <h3>Punk×VNG+Fixlag</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/2qi3z12ypm1yqqk/PunkX_VNG_64Bits_2.702.622.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/Neutron-Executor-Favicon.webp" alt="Neutron">
+                </div>
+                <div class="client-info">
+                    <h3>Neutron×VNG+Fixlag</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/jrlemyenm0o65i9/Neutron_VNG_32Bit_702.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/acr.webp" alt="Arceus">
+                </div>
+                <div class="client-info">
+                    <h3>Arceus×Neo VNG</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/ye88wcsclp9iqws/Arceus_x_Neo_VNG_V2.702.632.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+
+            <div class="client-box">
+                <div class="version-badge">v2.702</div>
+                <div class="client-thumb">
+                    <img src="ẢNH/skidix.webp" alt="Skibx">
+                </div>
+                <div class="client-info">
+                    <h3>Skibx×VNG</h3>
+                    <p>Font thường.</p>
+                    <a href="https://www.mediafire.com/file/tfuwuuqfqh1qumz/Skibx_VNG_V2.702.632.apk/file" class="action-btn"><i class="fas fa-download"></i> TẢI XUỐNG</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ACCOUNTS SECTION -->
+    <section id="accounts" class="section">
+        <div class="hero-head">
+            <h2>BÁN TÀI KHOẢN</h2>
+            <p>BLOX FRUITS - GIÁ TỐT NHẤT</p>
+        </div>
+        <div class="accounts-grid">
+            <div class="account-card">
+                <div class="acc-header" style="background: var(--accent-gradient-1);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/11-11-2025/a1e53666-05c7-45bd-b9ff-c1b9812ade14.jpg" class="acc-image" alt="VIP Account">
+                    <div class="acc-price-tag">240K VNĐ</div>
+                    <div class="acc-level-badge">LV 2500</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">Draco V4 + 10M Truy Nã Full Gear Hoặc Skill | 100% God 70% Cdk 80% Soul Guita</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ</span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('draco')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="account-card">
+                <div class="acc-header" style="background: var(--accent-gradient-2);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/general/15-10-2025/f570d716-84ac-434a-8c47-e95e4b8ed3f7.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">420K VNĐ</div>
+                    <div class="acc-level-badge">2450+</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">Blox Fruit 7 Tộc V4 Full Gear Hoặc Skill | 33% Có Trái Ác Quỷ Đỏ Trong Rương</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ</span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('v4race')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <div class="acc-header" style="background: var(--accent-gradient-3);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/15-10-2025/1e472b3a-35c8-4fd6-aa02-1393a01309d4.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">ROBUX 120H</div>
+                    <div class="acc-level-badge">THUẾ 30% </div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">💵R0BUX 120H Giá Rẻ</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('robux')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/15-10-2025/66042640-d9ab-492c-89d6-e5b736b73648.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">Gamepass</div>
+                    <div class="acc-level-badge">giá rẻ</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">🍉Gamepass Blox Fruit</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ</span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('gamepass')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/16-10-2025/c57aa0ea-0f71-4664-bf2a-80390d053bfe.jpg" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">220 VND</div>
+                    <div class="acc-level-badge">2550+</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">Quỷ V4 + 10M Truy Nã Full Gear Hoặc Skill | 100% God 70% Cdk 80% Soul Guitar</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('ghoul10m')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/16-10-2025/2257978d-b735-45fc-a59f-02a85c94d5b3.jpg" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">220K VNĐ</div>
+                    <div class="acc-level-badge">LV 2450</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">MÁY 10M BOUNTY</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('cycbot10m')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/15-10-2025/e6df8f3d-3771-482d-a6d8-92cea02778f8.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">20.000 VNĐ</div>
+                    <div class="acc-level-badge">2800</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">RANDOM 3 TRAI MYTHIC TRONG RƯƠNG</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('3trai')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/15-10-2025/bc646d15-6bb3-488f-965d-4bcf36bb7c7e.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">CÀY THUÊ</div>
+                    <div class="acc-level-badge">hehe</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">CÀY THUÊ BLOX FRUIT</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('caythue')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div> 
+    
+            <div class="account-card">
+                <div class="acc-header" style="background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);">
+                    <img src="https://404-pornhub.hcm.s3storage.vn/uploads/15-10-2025/2e513f96-68bb-439f-9b42-b24a1c3d7e90.webp" class="acc-image" alt="Blox Fruits">
+                    <div class="acc-price-tag">FRUIT BLOX FRUIT</div>
+                    <div class="acc-level-badge">ngon</div>
+                </div>
+                <div class="acc-body">
+                    <h3 class="acc-title">FRUIT BLOX FRUIT</h3>
+                    <div class="acc-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>UY TÍNH</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>GIÁ RẺ </span>
+                        </div>
+                    </div>
+                    <div class="acc-actions">
+                        <a href="https://discord.gg/aZ4AD9vfxg" class="btn-acc btn-buy">
+                            <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        </a>
+                        <button class="btn-acc btn-details" onclick="showAccDetail('fruit')">
+                            <i class="fab fa-discord"></i> CHI TIẾT
+                        </button>
+                    </div>
+                </div>
+            </div>             
+        </div>
+    </section>
+
+    <!-- SCRIPTS SECTION -->
+    <section id="scripts" class="section">
+        <div class="hero-head">
+            <h2>SCRIPT HUB</h2>
+            <p>Auto Farm</p>
+        </div>
+
+        <div class="search-wrapper">
+            <input type="text" id="script-search" class="search-input" placeholder="Tìm kiếm Script (VD: Quantum, Redz...)" onkeyup="filterScripts()">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <div class="script-list" id="script-container">
+            <div class="terminal-box" data-name="quantum hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Quantum Hub</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+                </div>
+            </div>
+
+            <div class="terminal-box" data-name="redz hub campuchia v4">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Redz Hub Campuchia V4</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/vinh129150/hack/refs/heads/main/Bloxfruits.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+                </div>
+            </div>
+
+            <div class="terminal-box" data-name="hiru hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Hiru Hub</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
 getgenv().Settings = {
 JoinTeam = true,
 Team = "Marines"-- Pirates or Marines
 }
 loadstring(game:HttpGet("https://raw.githubusercontent.com/KiddoHiru/BloxFruits/main/Source.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="andepzai hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Andepzai Hub</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Andepzai Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Andepzai Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/trongdeptraihucscript/Adz-Hub/refs/heads/main/Adz-Hub.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/trongdeptraihucscript/Adz-Hub/refs/heads/main/Adz-Hub.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
                 </div>
-                
-                <div class="terminal-box" data-name="Teddy Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Teddy Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/ea696e8e7439ba51"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+            </div>
+
+            <div class="terminal-box" data-name="teddy hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Teddy Hub</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Ok hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Ok hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/fakekuri/Okhubhere/refs/heads/main/MainBloxFruit.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/ea696e8e7439ba51"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
                 </div>
-                
-                <div class="terminal-box" data-name="BlueX Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">BlueX Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+            </div>
+
+            <div class="terminal-box" data-name="ok hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Ok hub</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Gravity Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Gravity Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/fakekuri/Okhubhere/refs/heads/main/MainBloxFruit.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
                 </div>
-                
-                <div class="terminal-box" data-name="Zee Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Zee Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://zuwz.me/Ls-Zee-Hub"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+            </div>
+
+            <div class="terminal-box" data-name="bluex hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">BlueX Hub</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Xeter Hub V1">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Xeter Hub V1</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Version = "V1"
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+                </div>
+            </div>
+
+            <div class="terminal-box" data-name="gravity hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Gravity Hub</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-GravityHub/BloxFruit/refs/heads/main/Main.lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+                </div>
+            </div>
+
+            <div class="terminal-box" data-name="zee hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Zee Hub</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://zuwz.me/Ls-Zee-Hub"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+                </div>
+            </div>
+
+            <div class="terminal-box" data-name="xeter hub v1">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Xeter Hub V1</div>
+                </div>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>getgenv().Version = "V1"
 getgenv().Team = "Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="xeter hub v2">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Xeter Hub V2</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Xeter Hub V2">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Xeter Hub V2</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Version = "V2"
+                <div class="code-content">
+                    <textarea class="code-area" readonly>getgenv().Version = "V2"
 getgenv().Team = "Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="xeter hub v3">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Xeter Hub V3</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Xeter Hub V3">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Xeter Hub V3</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Version = "V3"
+                <div class="code-content">
+                    <textarea class="code-area" readonly>getgenv().Version = "V3"
 getgenv().Team = "Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="xeter hub v4">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Xeter Hub V4</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Xeter Hub V4">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Xeter Hub V4</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Version = "V4"
+                <div class="code-content">
+                    <textarea class="code-area" readonly>getgenv().Version = "V4"
 getgenv().Team = "Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/TlDinhKhoi/Xeter/refs/heads/main/Main.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="hnc hub">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">HNC Hub</div>
                 </div>
-                
-                <div class="terminal-box" data-name="HNC Hub">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">HNC Hub</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().team = "Pirates" --"Marines"
+                <div class="code-content">
+                    <textarea class="code-area" readonly>getgenv().team = "Pirates" --"Marines"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/hnc-roblox/HNCHubOnTop/refs/heads/main/HNC_Roblox.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
+<div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
+</div>
+</div>
+            <div class="terminal-box" data-name="tuấn anh ios">
+                <div class="terminal-bar">
+                    <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
+                    <div class="t-title">Tuấn Anh IOS</div>
                 </div>
-                
-                <div class="terminal-box" data-name="Tuấn Anh IOS">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Tuấn Anh IOS</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Trẩu V1">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Trẩu V1</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/trauv2.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Trẩu V2">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Trẩu V2</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/TrauRobloxRedZV2.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Trẩu V3">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Trẩu V3</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/traurobloxv3.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Trẩu V4">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Trẩu V4</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/traurobloxdeptrai/traukhoaito/refs/heads/main/traurobloxredzv4.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Redz Hub Fake">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Redz Hub Fake</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().team = "Marines" -- Marines or Pirates
-_G.Translate = "English"
--- Thai or Russian or Portuguese or Vietnamese
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-Hinishi/Hinishi-Hub/refs/heads/main/Freemium.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="The forge">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">The forge</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://pandadevelopment.net/virtual/file/f3e2379f5d38627e"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Turbo Lite">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Turbo Lite</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/TurboLite/Script/main/FixLag.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Night mystic">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Night mystic</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>loadstring(game:HttpGet("https://pastefy.app/B6YlbRFj/raw"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Auto Lấy cybog">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Auto Lấy Cyborg</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Team = "Marines"
-getgenv().Get_Race = "Cyborg"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b3e1e7207c5d11ed755.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-                
-                <div class="terminal-box" data-name="Auto Lấy ghoul">
-                    <div class="terminal-bar">
-                        <div class="t-dots"><div class="t-dot red"></div><div class="t-dot yellow"></div><div class="t-dot green"></div></div>
-                        <div class="t-title">Auto Lấy ghoul</div>
-                    </div>
-                    <div class="code-content">
-                        <textarea class="code-area" readonly>getgenv().Team = "Marines"
-getgenv().Get_Race = "Ghoul"
-loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7a6c326e81861b3e1e7207c5d11ed755.lua"))()</textarea>
-                        <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
-                    </div>
-                </div>
-script.txt
-21 KB         
-
-            </div>
-        </section>
-
-        <section id="discord" class="section">
-            <div class="hero-head">
-                <h2>COMMUNITY</h2>
-                <p>Join The Gang</p>
-            </div>
-
-            <div class="discord-wall">
-                
-                <div class="discord-plate">
-                    <div class="dc-icon-frame">
-                        <img src="https://media.tenor.com/P7WmnYR9pxsAAAAe/cute.png" class="dc-img" alt="Server Icon" 
-                             onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
-                        <div class="dc-status"></div>
-                    </div>
-                    <div class="dc-name">NAK & NHOI</div>
-                    <div class="dc-info">Cộng đồng bất ổn nhất quả đất. Share Script, Giveaway hàng ngày.</div>
-                    <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="btn-join">THAM GIA NGAY</a>
-                </div>
-
-                <div class="discord-plate">
-                    <div class="dc-icon-frame">
-                        <img src="https://i.pinimg.com/736x/37/5b/e3/375be378ebe3ac5d55c98bcd3f09ab0d.jpg" class="dc-img" alt="Server Icon"
-                             onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
-                        <div class="dc-status"></div>
-                    </div>
-                    <div class="dc-name">NHÀ TRẺ SUN</div>
-                    <div class="dc-info">Giao lưu kết bạn bốn phương. Anh em thiện lành, vui vẻ.</div>
-                    <a href="https://discord.gg/DxHFtbn6aX" target="_blank" class="btn-join">THAM GIA NGAY</a>
-                </div>
-
-                <div class="discord-plate">
-                    <div class="dc-icon-frame">
-                        <img src="https://i.pinimg.com/736x/ed/fd/99/edfd993fd0853ae4a99f9e7fce9865e6.jpg" class="dc-img" alt="Server Icon"
-                             onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
-                        <div class="dc-status"></div>
-                    </div>
-                    <div class="dc-name">IOS COMMUNITY</div>
-                    <div class="dc-info">Hội người dùng iOS. Chia sẻ Certificate, IPA và mẹo vặt.</div>
-                    <a href="https://discord.gg/aMdB6nNbx3" target="_blank" class="btn-join">THAM GIA NGAY</a>
+                <div class="code-content">
+                    <textarea class="code-area" readonly>loadstring(game:HttpGet("https://raw.githubusercontent.com/AnhTuanDzai-Hub/TuanAnhIOS/refs/heads/main/TuanAnhIOS-Main.Lua"))()</textarea>
+                    <div class="copy-overlay"><button class="btn-copy" onclick="copyToClipboard(this)"><i class="fas fa-copy"></i> COPY</button></div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </div>
+    <!-- DISCORD SECTION -->
+    <section id="discord" class="section">
+        <div class="hero-head">
+            <h2>COMMUNITY</h2>
+            <p>Join The Gang</p>
+        </div>
 
-    <script>
-        // ==========================================
-        // 1. PARTICLE SYSTEM (HIỆU ỨNG HẠT)
-        // ==========================================
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
+        <div class="discord-wall">
+            <div class="discord-plate">
+                <div class="dc-icon-frame">
+                    <img src="https://media.tenor.com/P7WmnYR9pxsAAAAe/cute.png" class="dc-img" alt="Server Icon" onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
+                    <div class="dc-status"></div>
+                </div>
+                <div class="dc-name">NAK & NHOI</div>
+                <div class="dc-info">Cộng đồng bất ổn nhất quả đất. Share Script, Giveaway hàng ngày.</div>
+                <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="btn-join">THAM GIA NGAY</a>
+            </div>
+
+            <div class="discord-plate">
+                <div class="dc-icon-frame">
+                    <img src="https://i.pinimg.com/736x/37/5b/e3/375be378ebe3ac5d55c98bcd3f09ab0d.jpg" class="dc-img" alt="Server Icon" onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
+                    <div class="dc-status"></div>
+                </div>
+                <div class="dc-name">NHÀ TRẺ SUN</div>
+                <div class="dc-info">Giao lưu kết bạn bốn phương. Anh em thiện lành, vui vẻ.</div>
+                <a href="https://discord.gg/DxHFtbn6aX" target="_blank" class="btn-join">THAM GIA NGAY</a>
+            </div>
+
+            <div class="discord-plate">
+                <div class="dc-icon-frame">
+                    <img src="https://i.pinimg.com/736x/ed/fd/99/edfd993fd0853ae4a99f9e7fce9865e6.jpg" class="dc-img" alt="Server Icon" onerror="this.src='https://assets-global.website-files.com/6257adef93867e56f84d3092/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png'">
+                    <div class="dc-status"></div>
+                </div>
+                <div class="dc-name">IOS COMMUNITY</div>
+                <div class="dc-info">Hội người dùng iOS. Chia sẻ Certificate, IPA và mẹo vặt.</div>
+                <a href="https://discord.gg/aMdB6nNbx3" target="_blank" class="btn-join">THAM GIA NGAY</a>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- MODAL CHI TIẾT TÀI KHOẢN -->
+<div id="accModal" class="acc-modal">
+    <div class="acc-modal-content">
+        <span class="acc-modal-close" onclick="closeAccDetail()">&times;</span>
+        <div class="acc-modal-header">
+            <h2 id="accModalTitle">Chi Tiết Tài Khoản</h2>
+        </div>
         
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        <!-- 4 KHUNG THÔNG TIN -->
+        <div class="acc-details-grid" id="accDetailsGrid">
+            <!-- Sẽ được điền bằng JavaScript -->
+        </div>
+        
+        <div class="acc-modal-description">
+            <h3>📋 Thông Tin Chi Tiết</h3>
+            <p id="accModalDesc"></p>
+        </div>
+        
+        <div class="acc-modal-actions">
+            <a href="https://discord.gg/CJbpkPC4KJ" target="_blank" class="btn-modal-primary">
+                <i class="fab fa-discord"></i> MUA NGAY TRÊN DISCORD
+            </a>
+            <button class="btn-modal-secondary" onclick="closeAccDetail()">
+                <i class="fas fa-times"></i> ĐÓNG
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+    // ==========================================
+    // PARTICLE SYSTEM
+    // ==========================================
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3;
+            this.speedX = Math.random() * 0.5 - 0.25;
+            this.speedY = Math.random() * 0.5 + 0.1;
+            this.opacity = Math.random() * 0.6 + 0.2;
         }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 + 0.1; // Rơi xuống nhẹ
-                this.opacity = Math.random() * 0.5 + 0.1;
-            }
-            update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
         }
-
-        function initParticles() {
-            for (let i = 0; i < 100; i++) {
-                particles.push(new Particle());
-            }
+        draw() {
+            ctx.fillStyle = `rgba(102, 126, 234, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
         }
+    }
 
-        function animateParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-            }
-            requestAnimationFrame(animateParticles);
+    function initParticles() {
+        for (let i = 0; i < 150; i++) {
+            particles.push(new Particle());
         }
-        initParticles();
-        animateParticles();
+    }
 
-        // ==========================================
-        // 2. PAGE SWITCHING LOGIC
-        // ==========================================
-        function switchTab(pageId, btn) {
-            // Xử lý Active Menu
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-
-            // Xử lý chuyển trang với hiệu ứng
-            document.querySelectorAll('.section').forEach(sec => {
-                sec.classList.remove('active');
-                sec.style.opacity = '0';
-                sec.style.transform = 'translateY(40px)';
-            });
-
-            setTimeout(() => {
-                const target = document.getElementById(pageId);
-                target.classList.add('active');
-                // Trigger animation
-                setTimeout(() => {
-                    target.style.opacity = '1';
-                    target.style.transform = 'translateY(0)';
-                }, 50);
-            }, 300);
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
         }
+        requestAnimationFrame(animateParticles);
+    }
+    initParticles();
+    animateParticles();
 
-        // ==========================================
-        // 3. MUSIC & VISUALIZER ENGINE
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const audioPlayer = document.getElementById("bg-music");
-            
-            // DANH SÁCH BÀI HÁT (BẠN ĐIỀN LINK NHẠC VÀO ĐÂY)
-            const playlist = [
-                "nhạc/anngo.mp3", // Bài cũ của bạn
-                "nhạc/sommonthi.mp3",      // Ví dụ bài 2 (thay bằng link thật)
-            ];
+    // ==========================================
+    // PAGE SWITCHING
+    // ==========================================
+    function switchTab(pageId, btn) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
 
-            let currentSongIndex = 0;
-
-            // Hàm phát nhạc
-            function playMusic() {
-                audioPlayer.src = playlist[currentSongIndex];
-                audioPlayer.play().catch(e => console.log("Cần tương tác để phát nhạc: ", e));
-            }
-
-            // Tự động phát bài đầu tiên
-            playMusic();
-
-            // SỰ KIỆN QUAN TRỌNG: KHI HẾT BÀI -> CHUYỂN BÀI MỚI
-            audioPlayer.addEventListener('ended', function() {
-                currentSongIndex++; // Tăng chỉ số bài hát
-                
-                // Nếu hết danh sách thì quay lại bài đầu
-                if (currentSongIndex >= playlist.length) {
-                    currentSongIndex = 0;
-                }
-                
-                playMusic(); // Phát bài mới
-                console.log("Đã chuyển sang bài số: " + (currentSongIndex + 1));
-            });
-
-            // Xử lý click đầu tiên nếu trình duyệt chặn autoplay
-            document.addEventListener('click', function() {
-                if (audioPlayer.paused) {
-                    audioPlayer.play();
-                }
-            }, { once: true });
+        document.querySelectorAll('.section').forEach(sec => {
+            sec.classList.remove('active');
+            sec.style.opacity = '0';
+            sec.style.transform = 'translateY(50px)';
         });
-        // ==========================================
-        // 4. SEARCH FUNCTION (REALTIME)
-        // ==========================================
-        function filterScripts() {
-            const input = document.getElementById('script-search');
-            const filter = input.value.toLowerCase();
-            const nodes = document.querySelectorAll('.terminal-box');
 
-            nodes.forEach(node => {
-                const name = node.getAttribute('data-name').toLowerCase();
-                if(name.includes(filter)) {
-                    node.style.display = "block";
-                    // Animation nhẹ khi hiện
-                    node.style.animation = "fadeIn 0.5s ease";
+        setTimeout(() => {
+            const target = document.getElementById(pageId);
+            target.classList.add('active');
+            setTimeout(() => {
+                target.style.opacity = '1';
+                target.style.transform = 'translateY(0)';
+            }, 50);
+            }, 300);
+}
+    // ==========================================
+    // MUSIC SYSTEM - FIX CHẠY CHẬM
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', function() {
+        const audioPlayer = document.getElementById("bg-music");
+        const playlist = [
+            "nhạc/anngo.mp3",
+            "nhạc/sommonthi.mp3",
+        ];
+
+        let currentSongIndex = 0;
+        let isFirstInteraction = true;
+
+        function playMusic() {
+            audioPlayer.src = playlist[currentSongIndex];
+            audioPlayer.load();
+            
+            const playPromise = audioPlayer.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("🎵 Đang phát: " + playlist[currentSongIndex]);
+                }).catch(error => {
+                    console.log("⏸️ Cần tương tác để phát nhạc");
+                });
+            }
+        }
+
+        audioPlayer.volume = 0.4;
+        audioPlayer.preload = "auto";
+        playMusic();
+
+        audioPlayer.addEventListener('ended', function() {
+            currentSongIndex++;
+            if (currentSongIndex >= playlist.length) {
+                currentSongIndex = 0;
+            }
+            playMusic();
+        });
+
+        audioPlayer.addEventListener('error', function(e) {
+            console.error("❌ Lỗi tải nhạc:", e);
+            currentSongIndex++;
+            if (currentSongIndex < playlist.length) {
+                playMusic();
+            }
+        });
+
+        document.addEventListener('click', function() {
+            if (isFirstInteraction) {
+                isFirstInteraction = false;
+                if (audioPlayer.paused) {
+                    playMusic();
+                }
+            }
+        }, { once: true });
+
+        const muteBtn = document.getElementById('mute-btn');
+        if (muteBtn) {
+            muteBtn.addEventListener('click', function() {
+                if (audioPlayer.muted) {
+                    audioPlayer.muted = false;
+                    muteBtn.className = 'fas fa-volume-up';
+                    showToast("🔊 Đã bật nhạc");
                 } else {
-                    node.style.display = "none";
+                    audioPlayer.muted = true;
+                    muteBtn.className = 'fas fa-volume-mute';
+                    showToast("🔇 Đã tắt nhạc");
                 }
             });
         }
+    });
 
-        // ==========================================
-        // 5. COPY & NOTIFICATION SYSTEM
-        // ==========================================
-        function copyToClipboard(btn) {
-            const textarea = btn.closest('.code-content').querySelector('.code-area');
-            textarea.select();
-            document.execCommand('copy');
-            
-            // Hiệu ứng nút
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
-            btn.style.color = "#55efc4";
-            
-            showToast("Script copied to clipboard successfully!");
+    // ==========================================
+    // SEARCH FUNCTION
+    // ==========================================
+    function filterScripts() {
+        const input = document.getElementById('script-search');
+        const filter = input.value.toLowerCase();
+        const nodes = document.querySelectorAll('.terminal-box');
 
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.style.color = "#bdc3c7";
-            }, 2000);
+        nodes.forEach(node => {
+            const name = node.getAttribute('data-name').toLowerCase();
+            if(name.includes(filter)) {
+                node.style.display = "block";
+                node.style.animation = "fadeIn 0.5s ease";
+            } else {
+                node.style.display = "none";
+            }
+        });
+    }
+
+    // ==========================================
+    // ACCOUNT DETAIL MODAL
+    // ==========================================
+    const accDetailsData = {
+        draco: {
+            title: '🐉 Draco V4 + 10M Truy Nã',
+            details: [
+                { icon: 'fa-level-up-alt', label: 'Level', value: '2550' },
+                { icon: 'fa-shield-alt', label: 'Tộc', value: 'Draco V4 Full Gear' },
+                { icon: 'fa-apple-alt', label: 'Trái', value: 'Ngẫu nhiên (có thể chứa DF Đỏ)' },
+                { icon: 'fa-guitar', label: 'item', value: '70% Cursed Dual Katana + 80% Soul Guitar' },
+            ],
+            description: 'Game: Blox Fruit |Level: 2550+|Tộc: Draco V4 Full Gear |Truy nã: 10M+ |Item: Ngẫu Nhiên |Vũ khí: 70% Cursed Dual Katana + 80% Soul Guitar|DF Rương: Ngẫu nhiên (có thể chứa DF Đỏ) '
+        },
+        v4race: {
+            title: '🌟 7 Tộc V4 Full',
+            details: [
+                { icon: 'fa-level-up-alt', label: 'Level', value: '2550' },
+                { icon: 'fa-shield-alt', label: 'Tộc', value: '7 tộc Full Gear Hoặc Full Kĩ Năng' },
+                { icon: 'fa-apple-alt', label: 'Trái', value: 'Ngẫu nhiên (có thể chứa DF Đỏ)' },
+                { icon: 'fa-guitar', label: 'item', value: '70% Cursed Dual Katana + 80% Soul Guitar' },
+            ],
+            description: 'Game: Blox Fruit| Level: 2450+ |Tộc: 7 Tộc Full Gear Hoặc Full Kĩ Năng ( Quỷ,Draco,Máy,Thiên Thần,Cá,Human,Thỏ ) | Lưu ý: Có thể là full gear hoặc (full skill ) có thể là thiếu nhiệm vụ cuối để tăng thời gian v4|Trái Ác Quỷ Hiện Tại: Ngẫu Nhiên ( Thức tỉnh 1-3 trái ác quỷ )| Melee: 80% Full Tất Cả Melee 100% Đã Có GodHuman| Kiếm Sở Hữu: 90% Song Kiếm Oden | 30% Tam Kiếm Zoro | 0.5% Yoru | 0.1% Yoru V2|Súng: 88% Soul Guitar|Haki : 70% Haki V1 , 20% Haki V2 , 10% Full Haki|Trái Ác Quỷ Rương: 89% Có Trái Ác Quỷ Đỏ, 70% Sở Hữu Trái Ác Quỷ Tím.'
+        },
+        robux: {
+            title: '💎 Robux 120H Giá Rẻ',
+            details: [
+                { icon: 'fa-clock', label: 'Thời Gian', value: '120 Giờ' },
+                { icon: 'fa-credit-card', label: 'Card Vina', value: '10K = 53 RB' },
+                { icon: 'fa-university', label: 'Bank', value: '10K = 58 RB' },
+                { icon: 'fa-percent', label: 'Thuế', value: '30%' },
+            ],
+            description: 'Dịch vụ nạp Robux với thời gian chờ 120 giờ, giá cực rẻ. Hỗ trợ thanh toán qua thẻ cào Vina (10K = 53 Robux) và chuyển khoản ngân hàng (10K = 58 Robux). Đã trừ thuế 30% của Roblox. An toàn, uy tín, đã phục vụ hàng nghìn khách hàng. Hỗ trợ 24/7.'
+        },
+        gamepass: {
+            title: '🍉 Gamepass Blox Fruit',
+            details: [
+                { icon: 'fa-bolt', label: 'Loại', value: 'Gamepass' },
+                { icon: 'fa-shipping-fast', label: 'Tốc Độ', value: 'Chuyển Siêu Nhanh' },
+                { icon: 'fa-headset', label: 'Hỗ Trợ', value: 'Tư Vấn Discord' },
+                { icon: 'fa-dollar-sign', label: 'Giá', value: 'Rẻ Nhất' }
+            ],
+            description: 'Dịch vụ mua Gamepass Blox Fruits với giá tốt nhất thị trường. Chuyển siêu nhanh chỉ trong vài phút sau khi thanh toán. Hỗ trợ tư vấn và hướng dẫn chi tiết qua Discord. Bảo hành hoàn tiền 100% nếu có lỗi. Thanh toán linh hoạt qua nhiều hình thức.'
+        },
+        ghoul10m: {
+            title: '💰 QUỶ V4 + 10M BOUNTY',
+            details: [
+                { icon: 'fa-level-up-alt', label: 'Level', value: '2550' },
+                { icon: 'fa-shield-alt', label: 'Tộc', value: 'QUỶ V4' },
+                { icon: 'fa-apple-alt', label: 'Trái', value: 'Ngẫu nhiên (có thể chứa DF Đỏ)' },
+                { icon: 'fa-guitar', label: 'Beli', value: '70% Cursed Dual Katana + 80% Soul Guitar' },
+            ],
+            description: 'Game: Blox Fruit |Level: 2550+ | Tộc: Quỷ V4 Full Gear | Truy nã: 10M+|Item: Ngẫu Nhiên |Vũ khí: 70% Cursed Dual Katana + 80% Soul Guitar |DF Rương: Ngẫu nhiên (có thể chứa DF Đỏ)'
+        },
+        cycbot10m: {
+            title: '💰 MÁY V4 + 10M BOUNTY',
+            details: [
+                { icon: 'fa-level-up-alt', label: 'Level', value: '2550' },
+                { icon: 'fa-shield-alt', label: 'Tộc', value: 'MÁY V4' },
+                { icon: 'fa-apple-alt', label: 'Trái', value: 'Ngẫu nhiên (có thể chứa DF Đỏ)' },
+                { icon: 'fa-guitar', label: 'Beli', value: '70% Cursed Dual Katana + 80% Soul Guitar' },
+            ],
+            description: 'Game: Blox Fruit |Level: 2550+ | Tộc: MÁY V4 Full Gear | Truy nã: 10M+|Item: Ngẫu Nhiên |Vũ khí: 70% Cursed Dual Katana + 80% Soul Guitar |DF Rương: Ngẫu nhiên (có thể chứa DF Đỏ)'
+        },      
+    };
+
+    function showAccDetail(accId) {
+        const modal = document.getElementById('accModal');
+        const data = accDetailsData[accId];
+        
+        if (!data) return;
+        
+        document.getElementById('accModalTitle').textContent = data.title;
+        document.getElementById('accModalDesc').textContent = data.description;
+        
+        const detailsGrid = document.getElementById('accDetailsGrid');
+        detailsGrid.innerHTML = '';
+        
+        data.details.forEach(detail => {
+            const box = document.createElement('div');
+            box.className = 'acc-detail-box';
+            box.innerHTML = `
+                <div class="acc-detail-icon">
+                    <i class="fas ${detail.icon}"></i>
+                </div>
+                <div class="acc-detail-label">${detail.label}</div>
+                <div class="acc-detail-value">${detail.value}</div>
+            `;
+            detailsGrid.appendChild(box);
+        });
+        
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAccDetail() {
+        const modal = document.getElementById('accModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('accModal');
+        if (event.target == modal) {
+            closeAccDetail();
         }
+    }
 
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            
-            // Tự xóa sau 3s (khớp với animation CSS)
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
+    // ==========================================
+    // COPY & NOTIFICATION
+    // ==========================================
+    function copyToClipboard(btn) {
+        const textarea = btn.closest('.code-content').querySelector('.code-area');
+        textarea.select();
+        document.execCommand('copy');
+        
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> COPIED!';
+        btn.style.color = "#55efc4";
+        
+        showToast("✅ Script copied to clipboard successfully!");
 
-    </script>
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.color = "#bdc3c7";
+        }, 2000);
+    }
+
+    function showToast(message) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fas fa-info-circle"></i> <span>${message}</span>`;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+</script>
 </body>
-</html>
+</html></parameter>
+</invoke>
